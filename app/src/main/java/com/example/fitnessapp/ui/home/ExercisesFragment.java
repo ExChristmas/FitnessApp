@@ -7,24 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.fitnessapp.R;
 
-public class HomeFragment extends Fragment {
+public class ExercisesFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private ExercisesViewModel exercisesViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        exercisesViewModel =
+                ViewModelProviders.of(this).get(ExercisesViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_exercises, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        exercisesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 }

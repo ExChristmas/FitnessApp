@@ -60,7 +60,6 @@ public class UserActionsLocalDB implements ConectionDB {
             WorkoutActionsLocalDB workoutDAO = new WorkoutActionsLocalDB(this.context);
             user.setJournalWorkout(workoutDAO.getByIdUser(idUser));
         }
-        System.out.println("!!!!!!");
         return user;
     }
 

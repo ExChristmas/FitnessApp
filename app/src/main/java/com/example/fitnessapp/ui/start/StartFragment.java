@@ -24,7 +24,7 @@ public class StartFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         startViewModel =
                 ViewModelProviders.of(getActivity()).get(StartViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_exercises, container, false);
 
         this.textInfo = root.findViewById(R.id.textView);
 //        this.editTextEml = root.findViewById(R.id.editTextEml);

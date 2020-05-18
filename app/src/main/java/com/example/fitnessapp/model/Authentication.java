@@ -8,11 +8,7 @@ import androidx.lifecycle.Observer;
 import com.example.fitnessapp.model.dao.impl.UserActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
 import com.example.fitnessapp.model.entities.User;
-import com.example.fitnessapp.model.entities.Workout;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Authentication {
 
@@ -42,23 +38,19 @@ public class Authentication {
                         }
                     }
                 });
-        System.out.println("!!!!!!!!!!");
         return userLiveData;
     }
 
     public void registration(String name, String surname, String email, String password) {
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
+                    System.out.println("!!!!!!!!!!!!!!!!!!");
                     if (task.isSuccessful()) {
-//                        FirebaseUser userInFB = mAuth.getCurrentUser();
-                        List<Workout> workouts = new ArrayList<>();
                         User user = new User(email, name, surname, email);
                         userLocalDAO.add(user);
                         userGlobalDAO.add(user);
                     }
                 });
-
     }
 
     public void signOut() {
