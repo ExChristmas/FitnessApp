@@ -5,7 +5,6 @@ import java.util.List;
 
 public class User {
 
-    private String id;
     private String name;
     private String surname;
     private String email;
@@ -14,25 +13,18 @@ public class User {
 
     public User() { }
 
-    public User(String id, String name, String surname,
-                String email) {
-        this.id = id;
+    public User(String email, String name, String surname) {
+        this.email = email;
         this.name = name;
         this.surname = surname;
-        this.email = email;
         this.journal = new ArrayList<>();
     }
 
     public User(User user) {
-        this.id = user.id;
+        this.email = user.email;
         this.name = user.name;
         this.surname = user.surname;
-        this.email = user.email;
         this.journal = user.journal;
-    }
-
-    public String getId() {
-        return this.id;
     }
 
     public String getName() {
@@ -49,10 +41,6 @@ public class User {
 
     public List<Workout> getJournal() {
         return this.journal;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setName(String name) {

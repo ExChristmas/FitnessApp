@@ -11,7 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationFragment;
@@ -30,7 +30,7 @@ public class RegistrationFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         this.registrationViewModel =
-                ViewModelProviders.of(getActivity()).get(RegistrationViewModel.class);
+                new ViewModelProvider(getActivity()).get(RegistrationViewModel.class);
         View root = inflater.inflate(R.layout.registration_fragment, container,
                 false);
 

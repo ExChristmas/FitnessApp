@@ -6,9 +6,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.fitnessapp.model.DBHelper;
 import com.example.fitnessapp.model.dao.ConectionDB;
 import com.example.fitnessapp.model.entities.Exercise;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ExerciseActionsLocalDB implements ConectionDB {
 
@@ -22,6 +29,7 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         ContentValues cv = new ContentValues();
         cv.put("name", exercise.getName());
         cv.put("description", exercise.getDescription());
+        cv.put("part_of_body", exercise.getPartOfBody());
         this.database.insert("exercise", null, cv);
     }
 
@@ -34,6 +42,9 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         ContentValues cv = new ContentValues();
         cv.put("name", exercise.getName());
         cv.put("description", exercise.getDescription());
+        cv.put("part_of_body", exercise.getPartOfBody());
+        this.database.update("exercise", cv,"id = ?",
+                new String[] {exercise.getId()});
     }
 
     public Exercise getByName(String name) {
@@ -48,7 +59,7 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         Exercise exercise = null;
         if (c.moveToFirst()) {
             exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
-                    c.getString(2));
+                    c.getString(2), c.getString(3));
         }
         return exercise;
     }
@@ -65,9 +76,28 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         Exercise exercise = null;
         if (c.moveToFirst()) {
             exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
-                    c.getString(2));
+                    c.getString(2), c.getString(3));
         }
         return exercise;
+    }
+
+    public LiveData<List<Exercise>> getByPartOfBody(String partOfBody) {
+        @SuppressLint("Recycle") Cursor c = this.database.query("exercise",
+                null,
+                "part_of_body = ?",
+                new String[] {partOfBody},
+                null,
+                null,
+                null);
+        MutableLiveData<List<Exercise>> listLiveData = new MutableLiveData<>();
+        List<Exercise> exercises = new ArrayList<>();
+        while (c.moveToFirst()) {
+            Exercise exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
+                    c.getString(2), c.getString(3));
+            exercises.add(exercise);
+        }
+        listLiveData.setValue(exercises);
+        return Objects.requireNonNull(listLiveData.getValue()).isEmpty() ? null : listLiveData;
     }
 
     @Override

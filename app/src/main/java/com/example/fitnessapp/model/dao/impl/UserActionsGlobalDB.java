@@ -1,6 +1,7 @@
 package com.example.fitnessapp.model.dao.impl;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.model.dao.ConectionDB;
@@ -16,9 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class UserActionsGlobalDB implements ConectionDB {
@@ -79,7 +80,7 @@ public class UserActionsGlobalDB implements ConectionDB {
         return null;
     }
 
-    public MutableLiveData<User> getById(String id) {
+    public LiveData<User> getById(String id) {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
             DocumentReference dr = this.db.collection("user").document(id);
             dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -92,10 +93,9 @@ public class UserActionsGlobalDB implements ConectionDB {
                                 String userId = document.getId();
                                 Map<String, Object> objectMap = document.getData();
                                 User user = new User();
-                                user.setId(userId);
+                                user.setEmail(Objects.requireNonNull(objectMap.get("email")).toString());
                                 user.setName(Objects.requireNonNull(objectMap.get("name")).toString());
                                 user.setSurname(Objects.requireNonNull(objectMap.get("surname")).toString());
-                                user.setEmail(Objects.requireNonNull(objectMap.get("email")).toString());
                                 List<Map<String, Object>> journalListMap = (List<Map<String, Object>>) Objects
                                         .requireNonNull(objectMap.get("workouts"));
                                 List<Workout> journalList = new ArrayList<>();

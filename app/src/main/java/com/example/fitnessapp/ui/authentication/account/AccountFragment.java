@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.User;
@@ -24,8 +24,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        this.accountViewModel =
-                ViewModelProviders.of(getActivity()).get(AccountViewModel.class);
+        this.accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
         View root = inflater.inflate(R.layout.account_fragment, container, false);
 
         TextView textViewName = root.findViewById(R.id.textViewName);

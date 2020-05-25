@@ -44,9 +44,8 @@ public class Authentication {
     public void registration(String name, String surname, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    System.out.println("!!!!!!!!!!!!!!!!!!");
                     if (task.isSuccessful()) {
-                        User user = new User(email, name, surname, email);
+                        User user = new User(email, name, surname);
                         userLocalDAO.add(user);
                         userGlobalDAO.add(user);
                     }

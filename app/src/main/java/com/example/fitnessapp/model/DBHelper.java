@@ -8,16 +8,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private final static String createUser =
             "CREATE TABLE user (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "email TEXT PRIMARY KEY," +
                     "name TEXT," +
-                    "surname TEXT," +
-                    "email TEXT" +
-                    ");";
+                    "surname TEXT" +
+                    ")";
     private final static String createWorkout =
             "CREATE TABLE workout (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "date TEXT," +
-                    "id_user INTEGER, " +
+                    "id_user TEXT, " +
                     "FOREIGN KEY (id_user) REFERENCES user (id)" +
                     ")";
     private final static String createNote =
@@ -31,8 +30,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     ")";
     private final static String createExercise =
             "CREATE TABLE exercise (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "id TEXT PRIMARY KEY," +
                     "name TEXT," +
+                    "part_of_body TEXT," +
                     "description TEXT" +
                     ")";
 

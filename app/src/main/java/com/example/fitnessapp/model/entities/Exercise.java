@@ -4,17 +4,23 @@ public class Exercise {
 
     private String id;
     private String name;
+    private String partOfBody;
     private String description;
 
-    public Exercise(String id, String nameExercise, String description) {
+    public Exercise(){
+    }
+
+    public Exercise(String id, String nameExercise, String partOfBody, String description) {
         this.id = id;
         this.name = nameExercise;
+        this.partOfBody = partOfBody;
         this.description = description;
     }
 
     public Exercise(Exercise exercise) {
         this.id = exercise.id;
         this.name = exercise.name;
+        this.partOfBody = exercise.partOfBody;
         this.description = exercise.description;
     }
 
@@ -24,6 +30,10 @@ public class Exercise {
 
     public String getName() {
         return name;
+    }
+
+    public String getPartOfBody() {
+        return this.partOfBody;
     }
 
     public String getDescription() {

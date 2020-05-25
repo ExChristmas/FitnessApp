@@ -10,7 +10,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.ui.authentication.account.AccountFragment;
@@ -26,7 +26,7 @@ public class AuthorizationFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         this.authorizationViewModel =
-                ViewModelProviders.of(getActivity()).get(AuthorizationViewModel.class);
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
         View root = inflater.inflate(R.layout.email_password_fragment, container,
                 false);
 
@@ -48,14 +48,11 @@ public class AuthorizationFragment extends Fragment {
             });
         });
 
-        buttonRegistration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RegistrationFragment registrationFragment = new RegistrationFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment, registrationFragment);
-                transaction.commit();
-            }
+        buttonRegistration.setOnClickListener(v -> {
+            RegistrationFragment registrationFragment = new RegistrationFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.nav_host_fragment, registrationFragment);
+            transaction.commit();
         });
 
         return root;

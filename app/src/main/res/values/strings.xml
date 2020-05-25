@@ -3,4 +3,7 @@
     <string name="title_exercises">Упражнения</string>
     <string name="title_journal">Журнал</string>
     <string name="title_authentication">Аутентификация</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
