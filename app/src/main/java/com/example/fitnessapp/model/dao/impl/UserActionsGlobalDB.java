@@ -38,7 +38,7 @@ public class UserActionsGlobalDB implements ConectionDB {
         List<Map<String, Object>> listWorkouts = new ArrayList<>();
         for (Workout workout : user.getJournal()) {
             Map<String, Object> workoutObject = new HashMap<>();
-            workoutObject.put("id", workout.getId());
+//            workoutObject.put("id", workout.getId());
             String date = workout.getDate().get(Calendar.YEAR) + "-" +
                     (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
                     workout.getDate().get(Calendar.DAY_OF_MONTH);
@@ -49,7 +49,7 @@ public class UserActionsGlobalDB implements ConectionDB {
                 noteObject.put("id", note.getId());
                 noteObject.put("record", note.getRecord());
                 noteObject.put("id_exercise", note.getIdExerscise());
-                noteObject.put("id_workout", workout.getId());
+//                noteObject.put("id_workout", workout.getId());
                 listNotes.add(noteObject);
             }
             workoutObject.put("notes", listNotes);
@@ -71,9 +71,6 @@ public class UserActionsGlobalDB implements ConectionDB {
                 })
                 .addOnFailureListener(e -> {
                 });
-    }
-
-    public void update(User user) {
     }
 
     public MutableLiveData<User> getByEmail(String email) {

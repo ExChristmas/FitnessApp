@@ -11,10 +11,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.89"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonAddWorkout" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonAddWorkout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"

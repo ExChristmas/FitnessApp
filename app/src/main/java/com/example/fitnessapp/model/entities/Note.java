@@ -1,8 +1,5 @@
 package com.example.fitnessapp.model.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Note {
 
     private String id;
@@ -51,4 +48,7 @@ public class Note {
         this.idExerscise = idExerscise;
     }
 
+    public boolean isEmpty() {
+        return id == null && record == null && idWorkout == null && idExerscise == null;
+    }
 }

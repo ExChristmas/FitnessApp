@@ -63,6 +63,11 @@ public class NoteActionsLocalDB implements ConectionDB {
         return noteList.isEmpty() ? null : noteList;
     }
 
+    public void removeByIdWorkout(String idWorkout) {
+        this.database.delete("note", "id_workout = ?",
+                new String[] {idWorkout});
+    }
+
     @Override
     public void disconnect() {
         this.database.close();

@@ -2,11 +2,14 @@ package com.example.fitnessapp.ui.journal;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,76 +17,95 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
-import com.example.fitnessapp.model.entities.Note;
-import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.model.entities.Workout;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 
 public class JournalFragment extends Fragment {
 
     private JournalViewModel journalViewModel;
+    private AuthorizationViewModel authorizationViewModel;
     private ListView listView;
-    private MutableLiveData<User> userLiveData;
+    private List<Workout> workouts;
+
+    private Adapter adapter;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         journalViewModel =
-                ViewModelProviders.of(this).get(JournalViewModel.class);
-        View root = inflater.inflate(R.layout.journal_fragment, container, false);
+                new ViewModelProvider(getActivity()).get(JournalViewModel.class);
+        authorizationViewModel =
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
-        return root;
+        workouts = authorizationViewModel.getUser().getJournal();
+
+        return inflater.inflate(R.layout.journal_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = view.findViewById(R.id.listViewWorkouts);
-        User user = new User();
-        user.setEmail("averamenkoav98@mail.ru");
-        user.setName("Alex");
-        user.setSurname("Avaramenko");
-        List<Workout> workoutsList = new ArrayList<>();
-        Workout workout = new Workout();
-        workout.setId("1");
-        workout.setIdUser("avramenkoav98@mail.ru");
-        workout.setDate(new GregorianCalendar(2020, 3, 1));
-        List<Note> noteList = new ArrayList<>();
-        workout.setNotes(noteList);
-        workoutsList.add(workout);
-        user.setJournalWorkout(workoutsList);
+        Button buttonAddWorkout = view.findViewById(R.id.buttonAddWorkout);
 
-        DatePickerDialog datePickerDialog ;
+        buttonAddWorkout.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        userLiveData = new MutableLiveData<>();
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getContext(),
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    mDateSetListener,
+                    year, month, day);
 
-        Adapter adapter = new Adapter(getActivity(), workoutsList);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        });
+
+        mDateSetListener = (datePicker, year, month, day) -> {
+            month++;
+
+            // Формируем объект
+            Workout workout = new Workout();
+            GregorianCalendar gregorianCalendar = new GregorianCalendar(year,
+                    month, day);
+            //Задаём UUID
+            workout.setId(UUID.randomUUID().toString());
+            workout.setDate(gregorianCalendar);
+            workout.setIdUser(authorizationViewModel.getUser().getEmail());
+            workout.setNotes(new ArrayList<>());
+            // Кладём в базу
+            journalViewModel.putInDB(workout);
+
+            // Кидаем в список
+            workouts.add(workout);
+            adapter.notifyDataSetChanged();
+        };
+
+        adapter = new Adapter(getActivity(), workouts);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
-            userLiveData.setValue(user);
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        userLiveData.observeForever(exercise -> {
-            ListNotesFragment listNotesFragment = new ListNotesFragment();
-
+            // Обновляем журнал юзера
+            authorizationViewModel.setUserWorkouts(workouts);
+            // Переходим на фрагмент списка записей
+            ListNotesFragment listNotesFragment = new ListNotesFragment(position);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.nav_host_fragment, listNotesFragment);
             transaction.commit();
         });
     }
-
 
     class Adapter extends ArrayAdapter<Workout> {
 
@@ -103,7 +125,7 @@ public class JournalFragment extends Fragment {
                 convertView = layoutInflater
                         .inflate(R.layout.workouts_list_elem, parent, false);
             }
-                TextView date = convertView.findViewById(R.id.textViewDateWorkout);
+            TextView date = convertView.findViewById(R.id.textViewDateWorkout);
             Workout workout = workoutList.get(position);
             String dateString = workout.getDate().get(Calendar.YEAR) + "-" +
                     (workout.getDate().get(Calendar.MONTH) + 1) + "-" +

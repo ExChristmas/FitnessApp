@@ -1,9 +1,10 @@
 package com.example.fitnessapp.model.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private String name;
     private String surname;
@@ -57,6 +58,31 @@ public class User {
 
     public void setJournalWorkout(List<Workout> journal) {
         this.journal = journal;
+    }
+
+    public boolean setJournalDeleteWorkout(String id) {
+        for(int i = 0; i < journal.size(); i++) {
+            if(journal.get(i).getId().equals(id)) {
+                journal.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean setJournalDeleteNote(String idNote, String idWorkout) {
+        for(int i = 0; i < journal.size(); i++) {
+            if(journal.get(i).getId().equals(idWorkout)) {
+                List<Note> notes = journal.get(i).getNotes();
+                for(int j = 0; j < notes.size(); j++) {
+                    if(notes.get(j).getId().equals(idNote)) {
+                        journal.get(i).getNotes().remove(j);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

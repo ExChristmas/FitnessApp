@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -14,35 +15,84 @@
         android:id="@+id/textView3"
         android:layout_width="147dp"
         android:layout_height="44dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="28dp"
         android:text="Регистрация"
         android:textColor="#0C0C0C"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.465"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonRegInReg"
-        android:layout_width="206dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="28dp"
-        android:text="Зарегистрироваться"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="56dp"
+        android:text="Фамилия:"
+        android:textColor="#0B0A0A"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRegConfPass" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <EditText
+        android:id="@+id/editTextRegConfPass"
+        android:layout_width="211dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegPassword" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="91dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="48dp"
+        android:text="Повторите пароль:"
+        android:textColor="#101010"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <EditText
+        android:id="@+id/editTextRegPassword"
+        android:layout_width="211dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegEmail" />
+
+    <EditText
+        android:id="@+id/editTextRegEmail"
+        android:layout_width="211dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegSurname" />
 
     <EditText
         android:id="@+id/editTextRegName"
         android:layout_width="211dp"
         android:layout_height="48dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -51,110 +101,61 @@
         android:layout_width="62dp"
         android:layout_height="22dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:text="Имя:"
         android:textColor="#0C0C0C"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/editTextRegName"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <EditText
-        android:id="@+id/editTextRegConfPass"
-        android:layout_width="211dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRegPassword" />
-
-    <EditText
-        android:id="@+id/editTextRegEmail"
-        android:layout_width="211dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRegSurname" />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="91dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
-        android:text="Повторите пароль:"
-        android:textColor="#101010"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="48dp"
-        android:text="Пароль:"
-        android:textColor="#090909"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-    <EditText
-        android:id="@+id/editTextRegPassword"
-        android:layout_width="211dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRegEmail" />
-
-    <EditText
-        android:id="@+id/editTextRegSurname"
-        android:layout_width="211dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRegName" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="44dp"
         android:text="Email:"
         android:textColor="#0C0C0C"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
+    <EditText
+        android:id="@+id/editTextRegSurname"
+        android:layout_width="211dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegName" />
+
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="52dp"
-        android:text="Фамилия:"
-        android:textColor="#0B0A0A"
+        android:text="Пароль:"
+        android:textColor="#090909"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <Button
+        android:id="@+id/buttonRegInReg"
+        android:layout_width="206dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="32dp"
+        android:text="Зарегистрироваться"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegConfPass" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

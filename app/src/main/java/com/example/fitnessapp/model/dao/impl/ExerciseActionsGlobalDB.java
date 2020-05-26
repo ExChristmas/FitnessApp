@@ -47,7 +47,8 @@ public class ExerciseActionsGlobalDB {
                 .get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
                         List<Exercise> exercises = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        for (QueryDocumentSnapshot document :
+                                Objects.requireNonNull(task.getResult())) {
 
                             Exercise exercise = document.toObject(Exercise.class);
                             exercise.setId(document.getId());

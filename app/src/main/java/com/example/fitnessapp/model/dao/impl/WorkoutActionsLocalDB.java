@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.fitnessapp.model.DBHelper;
 import com.example.fitnessapp.model.dao.ConectionDB;
-
 import com.example.fitnessapp.model.entities.Workout;
 
 import java.util.ArrayList;
@@ -37,6 +36,9 @@ public class WorkoutActionsLocalDB implements ConectionDB {
     }
 
     public void remove(Workout workout) {
+        NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(context);
+        noteDAO.getByIdWorkout(workout.getId());
+        noteDAO.disconnect();
         this.database.delete("workout", "id = ?",
                 new String[] {workout.getId()});
     }

@@ -14,17 +14,17 @@ public class DBHelper extends SQLiteOpenHelper {
                     ")";
     private final static String createWorkout =
             "CREATE TABLE workout (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "id TEXT PRIMARY KEY," +
                     "date TEXT," +
                     "id_user TEXT, " +
                     "FOREIGN KEY (id_user) REFERENCES user (id)" +
                     ")";
     private final static String createNote =
             "CREATE TABLE note (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "id TEXT PRIMARY KEY," +
                     "record TEXT," +
-                    "id_workout INTEGER," +
-                    "id_exercise INTEGER," +
+                    "id_workout TEXT," +
+                    "id_exercise TEXT," +
                     "FOREIGN KEY (id_workout) REFERENCES workout (id)," +
                     "FOREIGN KEY (id_exercise) REFERENCES exercise (id)" +
                     ")";
@@ -34,6 +34,12 @@ public class DBHelper extends SQLiteOpenHelper {
                     "name TEXT," +
                     "part_of_body TEXT," +
                     "description TEXT" +
+                    ")";
+    private final static String createSettings =
+            "CREATE TABLE exercise (" +
+                    "id INTEGER PRIMARY KEY," +
+                    "email TEXT," +
+                    "starus INTEGER" +
                     ")";
 
     public DBHelper(Context context) {
@@ -46,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(createWorkout);
         db.execSQL(createNote);
         db.execSQL(createExercise);
+        db.execSQL(createSettings);
     }
 
     @Override

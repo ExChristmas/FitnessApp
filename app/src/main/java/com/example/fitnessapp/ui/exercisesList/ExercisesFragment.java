@@ -35,7 +35,6 @@ public class ExercisesFragment extends Fragment {
     }
 
     @Override
-
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TabLayoutPagerAdapter tabLayoutPagerAdapter =
                 new TabLayoutPagerAdapter(getChildFragmentManager());

@@ -1,5 +1,6 @@
 package com.example.fitnessapp.ui.authentication.authorization;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class AuthorizationFragment extends Fragment {
     private EditText editTextEmail;
     private EditText editTextPas;
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -30,10 +32,24 @@ public class AuthorizationFragment extends Fragment {
         View root = inflater.inflate(R.layout.email_password_fragment, container,
                 false);
 
+//            authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
+//                if (user != null) {
+//                    AccountFragment accountFragment = new AccountFragment();
+//                    accountFragment.setUser(user);
+//                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.nav_host_fragment, accountFragment);
+//                    transaction.commit();
+//                }
+//            });
+
+
         this.editTextEmail = root.findViewById(R.id.editTextEmail);
         this.editTextPas = root.findViewById(R.id.editTextPas);
         Button buttonSignIn = root.findViewById(R.id.buttonSignIn);
         Button buttonRegistration = root.findViewById(R.id.buttonRegInReg);
+
+        this.editTextEmail.setText("avramenkoav98.mentore@yandex.ru");
+        this.editTextPas.setText("1234567");
 
         buttonSignIn.setOnClickListener(v -> {
             authorizationViewModel.autorization(editTextEmail.getText().toString(),
@@ -53,7 +69,7 @@ public class AuthorizationFragment extends Fragment {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.nav_host_fragment, registrationFragment);
             transaction.commit();
-        });
+    });
 
         return root;
     }

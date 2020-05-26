@@ -1,59 +1,68 @@
 package com.example.fitnessapp.model;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
+import com.example.fitnessapp.internetconnection.InternetConnection;
 import com.example.fitnessapp.model.dao.impl.UserActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
 import com.example.fitnessapp.model.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Authentication {
 
     private FirebaseAuth mAuth;
     private UserActionsLocalDB userLocalDAO;
     private UserActionsGlobalDB userGlobalDAO;
+    private Context context;
 
     public Authentication(Context context) {
         this.mAuth = FirebaseAuth.getInstance();
         this.userLocalDAO = new UserActionsLocalDB(context);
         this.userGlobalDAO = new UserActionsGlobalDB();
+        this.context = context;
     }
 
     public MutableLiveData<User> authorization(String email, String password) {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        userLiveData.setValue(userLocalDAO.getByEmail(email));
-                        if (userLiveData.getValue() == null) {
-                            userGlobalDAO.getById(email).observeForever(new Observer<User>() {
-                                @Override
-                                public void onChanged(User user) {
-                                    userLiveData.setValue(user);
-                                }
-                            });
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            userGlobalDAO.getById(email).observeForever(userLiveData::setValue);
                         }
-                    }
-                });
+                    });
         return userLiveData;
     }
 
     public void registration(String name, String surname, String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        User user = new User(email, name, surname);
-                        userLocalDAO.add(user);
-                        userGlobalDAO.add(user);
-                    }
-                });
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            User user = new User(email, name, surname);
+                            userLocalDAO.add(user);
+                            userGlobalDAO.add(user);
+                        }
+                    });
     }
 
     public void signOut() {
         mAuth.signOut();
     }
 
+    public LiveData<User> checkSignIn() {
+        if (InternetConnection.isConnected(context)) {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                return userGlobalDAO.getByEmail(user.getEmail());
+            }
+            return new MutableLiveData<>();
+        } else {
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+            return new MutableLiveData<>();
+        }
+    }
 }

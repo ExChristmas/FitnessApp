@@ -4,23 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/listViewNotes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.89"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
-
     <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonDelete"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Добавить запись"
+        android:text="Удалить тренировку"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <Button
+        android:id="@+id/buttonAddNote"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="4dp"
+        android:text="Добавить запись"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <ListView
+        android:id="@+id/listViewNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.90"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonAddNote">
+
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

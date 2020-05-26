@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
 //        getApplicationContext().deleteDatabase("fitnessDB");
 
         setContentView(R.layout.activity_main);
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
