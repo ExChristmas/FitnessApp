@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.fitnessapp.model.DBHelper;
 import com.example.fitnessapp.model.dao.ConectionDB;
 import com.example.fitnessapp.model.entities.User;
+import com.example.fitnessapp.model.entities.Workout;
 
 public class UserActionsLocalDB implements ConectionDB {
 
@@ -26,6 +27,11 @@ public class UserActionsLocalDB implements ConectionDB {
         cv.put("name", user.getName());
         cv.put("surname", user.getSurname());
         this.database.insert("user", null, cv);
+        WorkoutActionsLocalDB workoutActionsLocalDB = new WorkoutActionsLocalDB(context);
+        for (Workout workout : user.getJournal()) {
+            workoutActionsLocalDB.add(workout);
+        }
+        workoutActionsLocalDB.disconnect();
     }
 
     public void remove(User user) {
@@ -40,6 +46,7 @@ public class UserActionsLocalDB implements ConectionDB {
         cv.put("surname", user.getName());
         this.database.update("user", cv, "email = ?",
                 new String[] {user.getEmail()});
+
     }
 
     public User getByEmail(String email) {

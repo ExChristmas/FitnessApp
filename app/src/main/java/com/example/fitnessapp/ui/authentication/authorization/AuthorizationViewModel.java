@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.model.Authentication;
 import com.example.fitnessapp.model.dao.impl.NoteActionsLocalDB;
+import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
 import com.example.fitnessapp.model.dao.impl.WorkoutActionsLocalDB;
 import com.example.fitnessapp.model.entities.Note;
 import com.example.fitnessapp.model.entities.User;
@@ -31,6 +32,9 @@ public class AuthorizationViewModel extends AndroidViewModel {
     public LiveData<User> autorization(String email, String password) {
         MutableLiveData<User> liveData = new MutableLiveData<>();
         authentication.authorization(email, password).observeForever(user -> {
+            UserActionsLocalDB userActionsLocalDB = new UserActionsLocalDB(application);
+            userActionsLocalDB.add(user);
+            userActionsLocalDB.disconnect();
             this.user = user;
             liveData.setValue(user);
         });

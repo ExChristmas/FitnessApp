@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.fitnessapp.model.DBHelper;
 import com.example.fitnessapp.model.dao.ConectionDB;
+import com.example.fitnessapp.model.entities.Note;
 import com.example.fitnessapp.model.entities.Workout;
 
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ public class WorkoutActionsLocalDB implements ConectionDB {
         cv.put("date", date);
         cv.put("id_user", workout.getIdUser());
         this.database.insert("workout", null, cv);
+        NoteActionsLocalDB noteActionsLocalDB = new NoteActionsLocalDB(context);
+        for(Note note : workout.getNotes()) {
+            noteActionsLocalDB.add(note);
+        }
+        noteActionsLocalDB.disconnect();
     }
 
     public void remove(Workout workout) {

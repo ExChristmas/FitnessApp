@@ -29,12 +29,16 @@ public class Authentication {
 
     public MutableLiveData<User> authorization(String email, String password) {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
+        if(InternetConnection.isConnect(context)) {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             userGlobalDAO.getById(email).observeForever(userLiveData::setValue);
                         }
                     });
+        } else {
+            Toast.makeText(context, "Нет соединения с интернетом", Toast.LENGTH_SHORT).show();
+        }
         return userLiveData;
     }
 
@@ -54,7 +58,7 @@ public class Authentication {
     }
 
     public LiveData<User> checkSignIn() {
-        if (InternetConnection.isConnected(context)) {
+        if (InternetConnection.isConnect(context)) {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
                 return userGlobalDAO.getByEmail(user.getEmail());

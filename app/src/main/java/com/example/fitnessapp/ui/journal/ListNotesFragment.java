@@ -37,7 +37,6 @@ public class ListNotesFragment extends Fragment {
     private List<Exercise> exercisesList;
     private List<Note> notes;
     private Adapter adapter;
-    private Button buttonDeleteWorkout;
     private Button buttonAddNote;
     private int indexWorkout;
 

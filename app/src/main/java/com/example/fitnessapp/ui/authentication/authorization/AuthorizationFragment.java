@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,10 +31,16 @@ public class AuthorizationFragment extends Fragment {
 
         this.authorizationViewModel =
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
-        View root = inflater.inflate(R.layout.email_password_fragment, container,
+        return inflater.inflate(R.layout.email_password_fragment, container,
                 false);
 
-         User userCheck = authorizationViewModel.getUser();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        User userCheck = authorizationViewModel.getUser();
         if(userCheck != null) {
             AccountFragment accountFragment = new AccountFragment();
             accountFragment.setUser(userCheck);
@@ -42,21 +49,20 @@ public class AuthorizationFragment extends Fragment {
             transaction.commit();
         }
 
-//            authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
-//                if (user != null) {
-//                    AccountFragment accountFragment = new AccountFragment();
-//                    accountFragment.setUser(user);
-//                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                    transaction.replace(R.id.nav_host_fragment, accountFragment);
-//                    transaction.commit();
-//                }
-//            });
+        authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                AccountFragment accountFragment = new AccountFragment();
+                accountFragment.setUser(user);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.nav_host_fragment, accountFragment);
+                transaction.commit();
+            }
+        });
 
-
-        this.editTextEmail = root.findViewById(R.id.editTextEmail);
-        this.editTextPas = root.findViewById(R.id.editTextPas);
-        Button buttonSignIn = root.findViewById(R.id.buttonSignIn);
-        Button buttonRegistration = root.findViewById(R.id.buttonRegInReg);
+        this.editTextEmail = view.findViewById(R.id.editTextEmail);
+        this.editTextPas = view.findViewById(R.id.editTextPas);
+        Button buttonSignIn = view.findViewById(R.id.buttonSignIn);
+        Button buttonRegistration = view.findViewById(R.id.buttonRegInReg);
 
         this.editTextEmail.setText("avramenkoav98.mentore@yandex.ru");
         this.editTextPas.setText("1234567");
@@ -64,13 +70,13 @@ public class AuthorizationFragment extends Fragment {
         buttonSignIn.setOnClickListener(v -> {
             authorizationViewModel.autorization(editTextEmail.getText().toString(),
                     editTextPas.getText().toString()).observe(getViewLifecycleOwner(), user -> {
-                        if(user != null) {
-                            AccountFragment accountFragment = new AccountFragment();
-                            accountFragment.setUser(user);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.nav_host_fragment, accountFragment);
-                            transaction.commit();
-                        }
+                if(user != null) {
+                    AccountFragment accountFragment = new AccountFragment();
+                    accountFragment.setUser(user);
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.nav_host_fragment, accountFragment);
+                    transaction.commit();
+                }
             });
         });
 
@@ -79,9 +85,6 @@ public class AuthorizationFragment extends Fragment {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.nav_host_fragment, registrationFragment);
             transaction.commit();
-    });
-
-        return root;
+        });
     }
-
 }
