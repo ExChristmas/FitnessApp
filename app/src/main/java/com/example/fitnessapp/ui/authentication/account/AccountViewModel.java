@@ -14,7 +14,6 @@ public class AccountViewModel extends AndroidViewModel {
     public AccountViewModel(@NonNull Application application) {
         super(application);
         authentication = new Authentication(application.getApplicationContext());
-
     }
 
     void signOut() {

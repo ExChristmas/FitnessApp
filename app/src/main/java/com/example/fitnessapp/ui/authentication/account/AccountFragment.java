@@ -15,16 +15,21 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationFragment;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 public class AccountFragment extends Fragment {
 
     private AccountViewModel accountViewModel;
+    private AuthorizationViewModel authorizationViewModel;
     private User user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        this.accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
+        this.accountViewModel = new ViewModelProvider(getActivity())
+                .get(AccountViewModel.class);
+        this.authorizationViewModel = new ViewModelProvider(getActivity())
+                .get(AuthorizationViewModel.class);
         View root = inflater.inflate(R.layout.account_fragment, container, false);
 
         TextView textViewName = root.findViewById(R.id.textViewName);
@@ -38,6 +43,7 @@ public class AccountFragment extends Fragment {
 
         buttonSignOut.setOnClickListener(v -> {
             accountViewModel.signOut();
+            authorizationViewModel.signOut();
             AuthorizationFragment authorizationFragment = new AuthorizationFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.nav_host_fragment, authorizationFragment);

@@ -41,6 +41,14 @@ public class AuthorizationViewModel extends AndroidViewModel {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void signOut() {
+        user = null;
+    }
+
     public LiveData<User> getUserSignedIn() {
         return authentication.checkSignIn();
     }

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
+import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.ui.authentication.account.AccountFragment;
 import com.example.fitnessapp.ui.authentication.registration.RegistrationFragment;
 
@@ -31,6 +32,15 @@ public class AuthorizationFragment extends Fragment {
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
         View root = inflater.inflate(R.layout.email_password_fragment, container,
                 false);
+
+         User userCheck = authorizationViewModel.getUser();
+        if(userCheck != null) {
+            AccountFragment accountFragment = new AccountFragment();
+            accountFragment.setUser(userCheck);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.nav_host_fragment, accountFragment);
+            transaction.commit();
+        }
 
 //            authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
 //                if (user != null) {

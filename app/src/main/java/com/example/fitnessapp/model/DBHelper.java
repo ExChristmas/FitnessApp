@@ -36,7 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "description TEXT" +
                     ")";
     private final static String createSettings =
-            "CREATE TABLE exercise (" +
+            "CREATE TABLE settings (" +
                     "id INTEGER PRIMARY KEY," +
                     "email TEXT," +
                     "starus INTEGER" +

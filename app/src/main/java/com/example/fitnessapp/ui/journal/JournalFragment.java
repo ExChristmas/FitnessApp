@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
+import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.model.entities.Workout;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
@@ -35,6 +36,7 @@ public class JournalFragment extends Fragment {
     private AuthorizationViewModel authorizationViewModel;
     private ListView listView;
     private List<Workout> workouts;
+    private boolean fragmentWhithoutUser;
 
     private Adapter adapter;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -46,65 +48,80 @@ public class JournalFragment extends Fragment {
         authorizationViewModel =
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
-        workouts = authorizationViewModel.getUser().getJournal();
+        fragmentWhithoutUser = true;
 
-        return inflater.inflate(R.layout.journal_fragment, container, false);
+        User user = authorizationViewModel.getUser();
+
+        workouts = new ArrayList<>();
+
+        if(user != null) {
+            return inflater.inflate(R.layout.journal_fragment, container, false);
+        } else {
+            fragmentWhithoutUser = false;
+            return inflater.inflate(R.layout.fragment_without_user, container, false);
+        }
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        listView = view.findViewById(R.id.listViewWorkouts);
-        Button buttonAddWorkout = view.findViewById(R.id.buttonAddWorkout);
+        if(fragmentWhithoutUser) {
+            super.onViewCreated(view, savedInstanceState);
+            listView = view.findViewById(R.id.listViewWorkouts);
+            Button buttonAddWorkout = view.findViewById(R.id.buttonAddWorkout);
 
-        buttonAddWorkout.setOnClickListener(v -> {
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day = cal.get(Calendar.DAY_OF_MONTH);
+            workouts = authorizationViewModel.getUser().getJournal();
 
-            DatePickerDialog dialog = new DatePickerDialog(
-                    getContext(),
-                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                    mDateSetListener,
-                    year, month, day);
+            adapter = new Adapter(getActivity(), workouts);
 
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-        });
+            buttonAddWorkout.setOnClickListener(v -> {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        mDateSetListener = (datePicker, year, month, day) -> {
-            month++;
+                DatePickerDialog dialog = new DatePickerDialog(
+                        getContext(),
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year, month, day);
 
-            // Формируем объект
-            Workout workout = new Workout();
-            GregorianCalendar gregorianCalendar = new GregorianCalendar(year,
-                    month, day);
-            //Задаём UUID
-            workout.setId(UUID.randomUUID().toString());
-            workout.setDate(gregorianCalendar);
-            workout.setIdUser(authorizationViewModel.getUser().getEmail());
-            workout.setNotes(new ArrayList<>());
-            // Кладём в базу
-            journalViewModel.putInDB(workout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            });
 
-            // Кидаем в список
-            workouts.add(workout);
-            adapter.notifyDataSetChanged();
-        };
+            mDateSetListener = (datePicker, year, month, day) -> {
+                month++;
 
-        adapter = new Adapter(getActivity(), workouts);
-        listView.setAdapter(adapter);
+                // Формируем объект
+                Workout workout = new Workout();
+                GregorianCalendar gregorianCalendar = new GregorianCalendar(year,
+                        month, day);
+                //Задаём UUID
+                workout.setId(UUID.randomUUID().toString());
+                workout.setDate(gregorianCalendar);
+                workout.setIdUser(authorizationViewModel.getUser().getEmail());
+                workout.setNotes(new ArrayList<>());
+                // Кладём в базу
+                journalViewModel.putInDB(workout);
 
-        listView.setOnItemClickListener((parent, view1, position, id) -> {
-            // Обновляем журнал юзера
-            authorizationViewModel.setUserWorkouts(workouts);
-            // Переходим на фрагмент списка записей
-            ListNotesFragment listNotesFragment = new ListNotesFragment(position);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.nav_host_fragment, listNotesFragment);
-            transaction.commit();
-        });
+                // Кидаем в список
+                workouts.add(workout);
+                adapter.notifyDataSetChanged();
+            };
+
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                // Обновляем журнал юзера
+                authorizationViewModel.setUserWorkouts(workouts);
+                // Переходим на фрагмент списка записей
+                ListNotesFragment listNotesFragment = new ListNotesFragment(position);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.nav_host_fragment, listNotesFragment);
+                transaction.commit();
+            });
+        }
     }
 
     class Adapter extends ArrayAdapter<Workout> {
@@ -114,6 +131,12 @@ public class JournalFragment extends Fragment {
         Adapter(Context context, List<Workout> workoutList) {
             super(context, R.layout.workouts_list_elem, workoutList);
             this.workoutList = workoutList;
+        }
+
+        public void setList(List<Workout> workoutList) {
+            this.workoutList.clear();
+            this.workoutList.addAll(workoutList);
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -126,6 +149,12 @@ public class JournalFragment extends Fragment {
                         .inflate(R.layout.workouts_list_elem, parent, false);
             }
             TextView date = convertView.findViewById(R.id.textViewDateWorkout);
+            Button buttonDelete = convertView.findViewById(R.id.buttonDeleteWorkout);
+            buttonDelete.setOnClickListener(v -> {
+                //delete workout on DB
+                workoutList.remove(position);
+                notifyDataSetChanged();
+            });
             Workout workout = workoutList.get(position);
             String dateString = workout.getDate().get(Calendar.YEAR) + "-" +
                     (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
@@ -133,6 +162,11 @@ public class JournalFragment extends Fragment {
             date.setText(dateString);
 
             return convertView;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return true;
         }
     }
 }

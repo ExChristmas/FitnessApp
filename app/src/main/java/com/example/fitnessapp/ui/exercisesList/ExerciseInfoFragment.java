@@ -22,6 +22,7 @@ public class ExerciseInfoFragment extends Fragment {
 
     private Exercise exercise;
     private ActionBar actionBar;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
