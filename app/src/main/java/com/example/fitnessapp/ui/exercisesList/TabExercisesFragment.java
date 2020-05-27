@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +72,8 @@ public class TabExercisesFragment extends Fragment {
                 exercisesList = exercises;
                 List<Integer> images = new ArrayList<>();
 
-                for(int i = 0; i < 5; i++) {
-                    images.add(R.drawable.bench_press);
+                for(Exercise exercise : exercisesList) {
+                    images.add(getId(exercise.getId(), R.drawable.class));
                 }
 
                 Adapter adapter = new Adapter(getActivity(), exercisesList, images);
@@ -85,6 +86,16 @@ public class TabExercisesFragment extends Fragment {
         }
 
         return root;
+    }
+
+    public static int getId(String resourceName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            throw new RuntimeException("No resource ID found for: "
+                    + resourceName + " / " + c, e);
+        }
     }
 
     class Adapter extends ArrayAdapter<Exercise> {

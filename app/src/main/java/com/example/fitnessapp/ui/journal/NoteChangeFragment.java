@@ -26,6 +26,7 @@ import com.example.fitnessapp.model.entities.Exercise;
 import com.example.fitnessapp.model.entities.Note;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +101,9 @@ public class NoteChangeFragment extends Fragment {
                 });
 
         buttonOk.setOnClickListener(v -> {
+            //
+//            listNotesNoteChangeSharedViewModel.updateNote(authorizationViewModel.getUser()
+//                    .getJournal().get(idWorkout).getNotes().get(idNote));
             authorizationViewModel.getUser().getJournal()
                     .get(idWorkout).getNotes().get(idNote)
                     .setIdExerscise(exerciseList.get(spinner.getSelectedItemPosition()).getId());
@@ -111,6 +115,16 @@ public class NoteChangeFragment extends Fragment {
             transaction.replace(R.id.nav_host_fragment, listNotesFragment);
             transaction.commit();
         });
+    }
+
+    public static int getId(String resourceName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            throw new RuntimeException("No resource ID found for: "
+                    + resourceName + " / " + c, e);
+        }
     }
 
     class SpinnerAdapter extends ArrayAdapter<Exercise> {
@@ -155,6 +169,7 @@ public class NoteChangeFragment extends Fragment {
 
             if (exercise != null) {
                 textViewEx.setText(exercise.getName());
+                imageViewEx.setImageResource(getId(exercise.getId(), R.drawable.class));
             }
 
             return convertView;

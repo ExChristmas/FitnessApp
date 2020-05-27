@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "CREATE TABLE settings (" +
                     "id INTEGER PRIMARY KEY," +
                     "email TEXT," +
-                    "starus INTEGER" +
+                    "status INTEGER" +
                     ")";
 
     public DBHelper(Context context) {

@@ -1,20 +1,26 @@
 package com.example.fitnessapp.model.entities;
 
+import androidx.annotation.NonNull;
+
 public class Settings {
 
     private int id;
     private String email;
     private int status;
 
-    Settings(int id, String email, int status) {
+    public Settings(int id, String email, int status) {
         this.id = id;
         this.email = email;
         this.status = status;
     }
 
-    public int getId() {
-        return id;
+    @NonNull
+    @Override
+    public String toString() {
+        return id + "-" + email + "-" + status;
     }
+
+    public int getId() { return this.id; }
 
     public void setId(int id) {
         this.id = id;

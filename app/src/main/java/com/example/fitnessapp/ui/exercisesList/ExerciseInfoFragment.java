@@ -18,6 +18,8 @@ import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
 
+import java.lang.reflect.Field;
+
 public class ExerciseInfoFragment extends Fragment {
 
     private Exercise exercise;
@@ -55,8 +57,18 @@ public class ExerciseInfoFragment extends Fragment {
 
         textViewName.setText(exercise.getName());
         textViewDescript.setText(exercise.getDescription());
+        image.setImageResource(getId(exercise.getId(), R.drawable.class));
     }
 
+    public static int getId(String resourceName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            throw new RuntimeException("No resource ID found for: "
+                    + resourceName + " / " + c, e);
+        }
+    }
 
     public void setExercise(Exercise exercise) {
         this.exercise = exercise;

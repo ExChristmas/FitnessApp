@@ -42,9 +42,11 @@ public class WorkoutActionsLocalDB implements ConectionDB {
     }
 
     public void remove(Workout workout) {
-        NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(context);
-        noteDAO.getByIdWorkout(workout.getId());
-        noteDAO.disconnect();
+        NoteActionsLocalDB noteActionsLocalDB = new NoteActionsLocalDB(context);
+        for (Note note : workout.getNotes()) {
+            noteActionsLocalDB.remove(note);
+        }
+        noteActionsLocalDB.disconnect();
         this.database.delete("workout", "id = ?",
                 new String[] {workout.getId()});
     }

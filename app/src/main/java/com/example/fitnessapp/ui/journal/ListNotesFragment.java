@@ -26,6 +26,7 @@ import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewM
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ListNotesFragment extends Fragment {
 
@@ -63,6 +64,10 @@ public class ListNotesFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // put lost notes on DB
+//        listNotesNoteChangeSharedViewModel.putNotesOnDB(notes);
+        authorizationViewModel.getUser().getJournal().get(indexWorkout).setNotes(notes);
+
         JournalFragment journalFragment = new JournalFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.nav_host_fragment, journalFragment);
@@ -89,13 +94,19 @@ public class ListNotesFragment extends Fragment {
                 });
 
         buttonAddNote.setOnClickListener(v -> {
-            notes.add(new Note());
+            Note note = new Note();
+            note.setId(UUID.randomUUID().toString());
+            note.setIdWorkout(authorizationViewModel.getUser().getJournal()
+                    .get(indexWorkout).getId());
+            notes.add(note);
             adapter.setList(notes);
         });
 
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
+            // put lost notes on DB
+//            listNotesNoteChangeSharedViewModel.putNotesOnDB(notes);
             authorizationViewModel.getUser().getJournal().get(indexWorkout).setNotes(notes);
             NoteChangeFragment noteChangeFragment = new NoteChangeFragment(indexWorkout, position);
 
@@ -136,7 +147,7 @@ public class ListNotesFragment extends Fragment {
             Button buttonDelete = convertView.findViewById(R.id.buttonDeleteNote);
 
             buttonDelete.setOnClickListener(v -> {
-                authorizationViewModel.setUserDeleteNote(notesList.get(position));
+//                authorizationViewModel.setUserDeleteNote(notesList.get(position));
                 notesList.remove(position);
                 notes.remove(position);
                 notifyDataSetChanged();
@@ -144,7 +155,7 @@ public class ListNotesFragment extends Fragment {
 
             Note note = notesList.get(position);
 
-            if (!note.isEmpty() && !exercisesList.isEmpty()) {
+            if (note.getIdExerscise() != null && !exercisesList.isEmpty()) {
                 textViewEx.setText(exercisesList.get(listNotesNoteChangeSharedViewModel
                         .getIndexExercise(exercisesList, note.getIdExerscise())).getName());
                 textViewRec.setText(note.getRecord());

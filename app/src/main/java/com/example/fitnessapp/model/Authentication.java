@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.internetconnection.InternetConnection;
+import com.example.fitnessapp.model.dao.impl.SettingsActionsLocalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
 import com.example.fitnessapp.model.entities.User;
@@ -18,18 +19,21 @@ public class Authentication {
     private FirebaseAuth mAuth;
     private UserActionsLocalDB userLocalDAO;
     private UserActionsGlobalDB userGlobalDAO;
+    private SettingsActionsLocalDB settingsLocalDAO;
     private Context context;
 
     public Authentication(Context context) {
         this.mAuth = FirebaseAuth.getInstance();
         this.userLocalDAO = new UserActionsLocalDB(context);
         this.userGlobalDAO = new UserActionsGlobalDB();
+        this.settingsLocalDAO = new SettingsActionsLocalDB(context);
         this.context = context;
     }
 
     public MutableLiveData<User> authorization(String email, String password) {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
         if(InternetConnection.isConnect(context)) {
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

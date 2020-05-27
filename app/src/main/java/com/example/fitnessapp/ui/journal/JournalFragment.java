@@ -52,8 +52,6 @@ public class JournalFragment extends Fragment {
 
         User user = authorizationViewModel.getUser();
 
-        workouts = new ArrayList<>();
-
         if(user != null) {
             return inflater.inflate(R.layout.journal_fragment, container, false);
         } else {
@@ -102,8 +100,8 @@ public class JournalFragment extends Fragment {
                 workout.setDate(gregorianCalendar);
                 workout.setIdUser(authorizationViewModel.getUser().getEmail());
                 workout.setNotes(new ArrayList<>());
-                // Кладём в базу
-                journalViewModel.putInDB(workout);
+                // put in DB!!!
+//                journalViewModel.putInDB(workout);
 
                 // Кидаем в список
                 workouts.add(workout);
@@ -152,6 +150,7 @@ public class JournalFragment extends Fragment {
             Button buttonDelete = convertView.findViewById(R.id.buttonDeleteWorkout);
             buttonDelete.setOnClickListener(v -> {
                 //delete workout on DB
+//                journalViewModel.deleteInDB(workoutList.get(position));
                 workoutList.remove(position);
                 notifyDataSetChanged();
             });

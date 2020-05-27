@@ -21,4 +21,7 @@ public class JournalViewModel extends AndroidViewModel {
         workoutLocalDAO.add(workout);
     }
 
+    public void deleteInDB(Workout workout) {
+        workoutLocalDAO.remove(workout);
+    }
 }
