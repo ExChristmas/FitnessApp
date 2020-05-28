@@ -8,23 +8,27 @@ import androidx.lifecycle.LiveData;
 
 import com.example.fitnessapp.model.dao.impl.ExerciseActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.ExerciseActionsLocalDB;
-import com.example.fitnessapp.model.dao.impl.NoteActionsLocalDB;
 import com.example.fitnessapp.model.entities.Exercise;
-import com.example.fitnessapp.model.entities.Note;
 
 import java.util.List;
 
 public class ListNotesNoteChangeSharedViewModel extends AndroidViewModel {
 
-    ExerciseActionsGlobalDB exerciseGlobalDAO;
-    ExerciseActionsLocalDB exerciseLocalDAO;
+    private ExerciseActionsGlobalDB exerciseGlobalDAO;
+    private ExerciseActionsLocalDB exerciseLocalDAO;
+
     public ListNotesNoteChangeSharedViewModel(@NonNull Application application) {
         super(application);
         exerciseGlobalDAO = new ExerciseActionsGlobalDB();
+        exerciseLocalDAO = new ExerciseActionsLocalDB(application);
     }
 
     public LiveData<List<Exercise>> queryAllExercises() {
         return exerciseGlobalDAO.getAll();
+    }
+
+    public List<Exercise> queryAllExercisesLocal() {
+        return exerciseLocalDAO.getAll();
     }
 
     public Exercise getExerciseById(String idExercise) {
@@ -39,19 +43,4 @@ public class ListNotesNoteChangeSharedViewModel extends AndroidViewModel {
         }
         return -1;
     }
-
-    public void putNotesOnDB(List<Note> notes) {
-        NoteActionsLocalDB noteActionsLocalDB = new NoteActionsLocalDB(getApplication());
-        for(Note note : notes) {
-            noteActionsLocalDB.add(note);
-        }
-        noteActionsLocalDB.disconnect();
-    }
-
-    public void updateNote(Note note) {
-        NoteActionsLocalDB noteActionsLocalDB = new NoteActionsLocalDB(getApplication());
-        noteActionsLocalDB.update(note);
-        noteActionsLocalDB.disconnect();
-    }
-
 }

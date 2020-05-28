@@ -19,9 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationFragment;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 public class RegistrationFragment extends Fragment {
 
+    private AuthorizationViewModel authorizationViewModel;
     private RegistrationViewModel registrationViewModel;
     private ActionBar actionBar;
     private EditText editTextName;
@@ -34,6 +36,8 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        this.authorizationViewModel =
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
         this.registrationViewModel =
                 new ViewModelProvider(getActivity()).get(RegistrationViewModel.class);
         return inflater.inflate(R.layout.registration_fragment, container,

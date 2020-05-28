@@ -21,8 +21,8 @@ public class SettingsActionsLocalDB implements ConectionDB {
     public void add() {
         ContentValues cv = new ContentValues();
         cv.put("id", 0);
-        cv.put("email", "avramenko");
-        cv.put("status", 0);
+        cv.put("email", "avramenkoav98.mentore@yandex.ru");
+        cv.put("status", 1);
         this.database.insert("settings", null, cv);
     }
 

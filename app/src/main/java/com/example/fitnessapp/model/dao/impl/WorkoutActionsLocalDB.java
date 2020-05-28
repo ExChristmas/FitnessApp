@@ -31,6 +31,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
         String date = workout.getDate().get(Calendar.YEAR) + "-" +
                 (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
                 workout.getDate().get(Calendar.DAY_OF_MONTH);
+        cv.put("id", workout.getId());
         cv.put("date", date);
         cv.put("id_user", workout.getIdUser());
         this.database.insert("workout", null, cv);
@@ -60,6 +61,11 @@ public class WorkoutActionsLocalDB implements ConectionDB {
         cv.put("id_user", workout.getIdUser());
         this.database.update("workout", cv, "id = ?",
                 new String[] {workout.getId()});
+        NoteActionsLocalDB noteActionsLocalDB = new NoteActionsLocalDB(context);
+        for(Note note : workout.getNotes()) {
+            noteActionsLocalDB.update(note);
+        }
+        noteActionsLocalDB.disconnect();
     }
 
     public List<Workout> getByIdUser(String idUser) {
@@ -75,7 +81,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
         NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(this.context);
         String idWorkout;
         while (c.moveToNext()) {
-                    idWorkout = Long.toString(c.getLong(0));
+                    idWorkout = c.getString(0);
                     //преобразование строки в тип хранения даты
                     String[] ymd = c.getString(1).split("-");
                     GregorianCalendar date = new GregorianCalendar(Integer.parseInt(ymd[0]),
@@ -83,7 +89,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
 
                     Workout workout = new Workout(idWorkout,
                             date,
-                            Long.toString(c.getLong(2)));
+                            c.getString(2));
                     workout.setNotes(noteDAO.getByIdWorkout(idWorkout));
                     workoutsList.add(workout);
             }
@@ -109,7 +115,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
 
                 workout = new Workout(id,
                         date,
-                        Long.toString(c.getLong(2)));
+                        c.getString(2));
                 workout.setNotes(noteDAO.getByIdWorkout(id));
         }
         return workout;

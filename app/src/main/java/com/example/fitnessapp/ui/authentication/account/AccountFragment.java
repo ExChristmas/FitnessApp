@@ -42,6 +42,7 @@ public class AccountFragment extends Fragment {
         textViewEmail.setText(user.getEmail());
 
         buttonSignOut.setOnClickListener(v -> {
+            accountViewModel.recording(authorizationViewModel.getUser());
             accountViewModel.signOut();
             authorizationViewModel.signOut();
             AuthorizationFragment authorizationFragment = new AuthorizationFragment();
@@ -56,5 +57,4 @@ public class AccountFragment extends Fragment {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

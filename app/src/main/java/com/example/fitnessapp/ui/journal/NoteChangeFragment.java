@@ -24,6 +24,7 @@ import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
 import com.example.fitnessapp.model.entities.Note;
+import com.example.fitnessapp.model.internetconnection.InternetConnection;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.lang.reflect.Field;
@@ -53,6 +54,7 @@ public class NoteChangeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         listNotesNoteChangeSharedViewModel =
                 new ViewModelProvider(this).get(ListNotesNoteChangeSharedViewModel.class);
+
         authorizationViewModel =
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
@@ -89,24 +91,36 @@ public class NoteChangeFragment extends Fragment {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
-        listNotesNoteChangeSharedViewModel.queryAllExercises()
-                .observe(getViewLifecycleOwner(), exercises -> {
-                    exerciseList.addAll(exercises);
-                    if (!note.isEmpty()) {
-                        spinner.setSelection(listNotesNoteChangeSharedViewModel
-                                .getIndexExercise(exerciseList, note.getIdExerscise()));
-                        editTextNote.setText(note.getRecord());
-                    }
-                    spinnerAdapter.setList(exercises);
-                });
+        // если есть интернет, грузим упражнения из глобальной базы
+        if(InternetConnection.isConnect(getContext())) {
+            listNotesNoteChangeSharedViewModel.queryAllExercises()
+                    .observe(getViewLifecycleOwner(), exercises -> {
+                        exerciseList.addAll(exercises);
+                        if (!note.isEmpty()) {
+                            spinner.setSelection(listNotesNoteChangeSharedViewModel
+                                    .getIndexExercise(exerciseList, note.getIdExerscise()));
+                            editTextNote.setText(note.getRecord());
+                        }
+                        spinnerAdapter.setList(exercises);
+                    });
+        } else {
+            List<Exercise> exercises = listNotesNoteChangeSharedViewModel
+                    .queryAllExercisesLocal();
+            exerciseList.addAll(exercises);
+            if (!note.isEmpty()) {
+                spinner.setSelection(listNotesNoteChangeSharedViewModel
+                        .getIndexExercise(exerciseList, note.getIdExerscise()));
+                editTextNote.setText(note.getRecord());
+            }
+            spinnerAdapter.setList(exercises);
+        }
 
         buttonOk.setOnClickListener(v -> {
-            //
-//            listNotesNoteChangeSharedViewModel.updateNote(authorizationViewModel.getUser()
-//                    .getJournal().get(idWorkout).getNotes().get(idNote));
+            // обновляем упражнение
             authorizationViewModel.getUser().getJournal()
                     .get(idWorkout).getNotes().get(idNote)
                     .setIdExerscise(exerciseList.get(spinner.getSelectedItemPosition()).getId());
+            // обновляем запись об упражнении
             authorizationViewModel.getUser().getJournal().get(idWorkout).getNotes().get(idNote)
                     .setRecord(editTextNote.getText().toString());
 
@@ -174,7 +188,5 @@ public class NoteChangeFragment extends Fragment {
 
             return convertView;
         }
-
     }
-
 }

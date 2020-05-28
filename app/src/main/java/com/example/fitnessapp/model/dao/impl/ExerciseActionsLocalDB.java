@@ -58,7 +58,7 @@ public class ExerciseActionsLocalDB implements ConectionDB {
                         null);
         Exercise exercise = null;
         if (c.moveToFirst()) {
-            exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
+            exercise = new Exercise(c.getString(0), c.getString(1),
                     c.getString(2), c.getString(3));
         }
         return exercise;
@@ -81,6 +81,24 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         return exercise;
     }
 
+    public List<Exercise> getAll() {
+        @SuppressLint("Recycle") Cursor c = this.database
+                .query("exercise",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<Exercise> exercises = new ArrayList<>();
+        while (c.moveToFirst()) {
+            Exercise exercise = new Exercise(c.getString(0), c.getString(1),
+                    c.getString(2), c.getString(3));
+            exercises.add(exercise);
+        }
+        return Objects.requireNonNull(exercises).isEmpty() ? null : exercises;
+    }
+
     public LiveData<List<Exercise>> getByPartOfBody(String partOfBody) {
         @SuppressLint("Recycle") Cursor c = this.database.query("exercise",
                 null,
@@ -92,7 +110,7 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         MutableLiveData<List<Exercise>> listLiveData = new MutableLiveData<>();
         List<Exercise> exercises = new ArrayList<>();
         while (c.moveToFirst()) {
-            Exercise exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
+            Exercise exercise = new Exercise(c.getString(0), c.getString(1),
                     c.getString(2), c.getString(3));
             exercises.add(exercise);
         }

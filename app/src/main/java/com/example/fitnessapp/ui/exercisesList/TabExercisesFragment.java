@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class TabExercisesFragment extends Fragment {
 
+    private AuthorizationViewModel authorizationViewModel;
     private int indexFragment;
     private List<Exercise> exercisesList;
     private MutableLiveData<Exercise> exerciseLiveData;
@@ -38,6 +40,9 @@ public class TabExercisesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        this.authorizationViewModel =
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
         TabExercisesViewModel tabExercisesViewModel = new ViewModelProvider(getActivity())
                 .get(TabExercisesViewModel.class);
@@ -68,21 +73,21 @@ public class TabExercisesFragment extends Fragment {
                 listExerciseLiveData = tabExercisesViewModel.queryExeption("ноги");
             }
 
-            listExerciseLiveData.observe(getViewLifecycleOwner(), exercises -> {
-                exercisesList = exercises;
-                List<Integer> images = new ArrayList<>();
+                listExerciseLiveData.observe(getViewLifecycleOwner(), exercises -> {
+                    exercisesList = exercises;
+                    List<Integer> images = new ArrayList<>();
 
-                for(Exercise exercise : exercisesList) {
-                    images.add(getId(exercise.getId(), R.drawable.class));
-                }
+                    for (Exercise exercise : exercisesList) {
+                        images.add(getId(exercise.getId(), R.drawable.class));
+                    }
 
-                Adapter adapter = new Adapter(getActivity(), exercisesList, images);
-                listView.setAdapter(adapter);
+                    Adapter adapter = new Adapter(getActivity(), exercisesList, images);
+                    listView.setAdapter(adapter);
 
-                listView.setOnItemClickListener((parent, view, position, id) -> {
-                    exerciseLiveData.setValue(exercises.get(position));
+                    listView.setOnItemClickListener((parent, view, position, id) -> {
+                        exerciseLiveData.setValue(exercises.get(position));
+                    });
                 });
-            });
         }
 
         return root;

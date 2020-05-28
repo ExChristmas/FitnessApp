@@ -23,6 +23,7 @@ public class NoteActionsLocalDB implements ConectionDB {
 
     public void add(Note note) {
         ContentValues cv = new ContentValues();
+        cv.put("id", note.getId());
         cv.put("record", note.getRecord());
         cv.put("id_workout", note.getIdWorkout());
         cv.put("id_exercise", note.getIdExerscise());
@@ -47,17 +48,17 @@ public class NoteActionsLocalDB implements ConectionDB {
         @SuppressLint("Recycle") Cursor c = this.database
                 .query("note",
                         null,
-                        "id_worlout = ?",
+                        "id_workout = ?",
                         new String[] {idWorkout},
                         null,
                         null,
                         null);
         List<Note> noteList = new ArrayList<>();
         while(c.moveToNext()) {
-            Note note = new Note(Long.toString(c.getLong(0)),
+            Note note = new Note(c.getString(0),
                     c.getString(1),
                     idWorkout,
-                    Long.toString(c.getLong(2)));
+                    c.getString(2));
             noteList.add(note);
         }
         return noteList.isEmpty() ? null : noteList;

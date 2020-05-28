@@ -1,4 +1,4 @@
-package com.example.fitnessapp.internetconnection;
+package com.example.fitnessapp.model.internetconnection;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

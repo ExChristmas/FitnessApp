@@ -8,6 +8,8 @@ public class Settings {
     private String email;
     private int status;
 
+    public Settings() { }
+
     public Settings(int id, String email, int status) {
         this.id = id;
         this.email = email;

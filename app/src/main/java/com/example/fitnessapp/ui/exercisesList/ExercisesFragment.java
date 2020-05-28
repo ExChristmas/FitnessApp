@@ -12,14 +12,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 public class ExercisesFragment extends Fragment {
 
+    private AuthorizationViewModel authorizationViewModel;
     private MutableLiveData<Exercise> mutableLiveData;
 
     public ExercisesFragment() {
@@ -31,6 +34,9 @@ public class ExercisesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        this.authorizationViewModel =
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
+
         return inflater.inflate(R.layout.exercises_fragment, container, false);
     }
 

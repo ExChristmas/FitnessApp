@@ -13,21 +13,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
+import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.lang.reflect.Field;
 
 public class ExerciseInfoFragment extends Fragment {
 
+    private AuthorizationViewModel authorizationViewModel;
     private Exercise exercise;
     private ActionBar actionBar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        this.authorizationViewModel =
+                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
+
         View root = inflater.inflate(R.layout.exercise_info_fragment, container, false);
 
         actionBar = ((MainActivity)getActivity()).getSupportActionBar();

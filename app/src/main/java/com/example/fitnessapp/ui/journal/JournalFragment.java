@@ -32,7 +32,6 @@ import java.util.UUID;
 
 public class JournalFragment extends Fragment {
 
-    private JournalViewModel journalViewModel;
     private AuthorizationViewModel authorizationViewModel;
     private ListView listView;
     private List<Workout> workouts;
@@ -43,8 +42,7 @@ public class JournalFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        journalViewModel =
-                new ViewModelProvider(getActivity()).get(JournalViewModel.class);
+
         authorizationViewModel =
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
@@ -89,7 +87,6 @@ public class JournalFragment extends Fragment {
             });
 
             mDateSetListener = (datePicker, year, month, day) -> {
-                month++;
 
                 // Формируем объект
                 Workout workout = new Workout();
@@ -100,8 +97,6 @@ public class JournalFragment extends Fragment {
                 workout.setDate(gregorianCalendar);
                 workout.setIdUser(authorizationViewModel.getUser().getEmail());
                 workout.setNotes(new ArrayList<>());
-                // put in DB!!!
-//                journalViewModel.putInDB(workout);
 
                 // Кидаем в список
                 workouts.add(workout);
@@ -149,8 +144,6 @@ public class JournalFragment extends Fragment {
             TextView date = convertView.findViewById(R.id.textViewDateWorkout);
             Button buttonDelete = convertView.findViewById(R.id.buttonDeleteWorkout);
             buttonDelete.setOnClickListener(v -> {
-                //delete workout on DB
-//                journalViewModel.deleteInDB(workoutList.get(position));
                 workoutList.remove(position);
                 notifyDataSetChanged();
             });
@@ -168,4 +161,5 @@ public class JournalFragment extends Fragment {
             return true;
         }
     }
+
 }

@@ -49,16 +49,14 @@ public class AuthorizationFragment extends Fragment {
             transaction.commit();
         }
 
-
-//        authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
-//            if (user != null) {
-//                AccountFragment accountFragment = new AccountFragment();
-//                accountFragment.setUser(user);
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                transaction.replace(R.id.nav_host_fragment, accountFragment);
-//                transaction.commit();
-//            }
-//        });
+        userCheck = authorizationViewModel.getUserSignedIn();
+            if (userCheck != null) {
+                AccountFragment accountFragment = new AccountFragment();
+                accountFragment.setUser(userCheck);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.nav_host_fragment, accountFragment);
+                transaction.commit();
+            }
 
         this.editTextEmail = view.findViewById(R.id.editTextEmail);
         this.editTextPas = view.findViewById(R.id.editTextPas);

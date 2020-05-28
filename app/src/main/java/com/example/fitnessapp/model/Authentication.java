@@ -3,14 +3,13 @@ package com.example.fitnessapp.model;
 import android.content.Context;
 import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.fitnessapp.internetconnection.InternetConnection;
 import com.example.fitnessapp.model.dao.impl.SettingsActionsLocalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
 import com.example.fitnessapp.model.entities.User;
+import com.example.fitnessapp.model.internetconnection.InternetConnection;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,7 +32,6 @@ public class Authentication {
     public MutableLiveData<User> authorization(String email, String password) {
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
         if(InternetConnection.isConnect(context)) {
-
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -42,6 +40,7 @@ public class Authentication {
                     });
         } else {
             Toast.makeText(context, "Нет соединения с интернетом", Toast.LENGTH_SHORT).show();
+            userLiveData.setValue(userLocalDAO.getByEmail(email));
         }
         return userLiveData;
     }
@@ -61,16 +60,16 @@ public class Authentication {
         mAuth.signOut();
     }
 
-    public LiveData<User> checkSignIn() {
+    public User checkSignIn() {
         if (InternetConnection.isConnect(context)) {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
-                return userGlobalDAO.getByEmail(user.getEmail());
+                return userLocalDAO.getByEmail(user.getEmail());
             }
-            return new MutableLiveData<>();
+            return null;
         } else {
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-            return new MutableLiveData<>();
+            return null;
         }
     }
 }

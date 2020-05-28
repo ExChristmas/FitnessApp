@@ -22,6 +22,7 @@ import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
 import com.example.fitnessapp.model.entities.Note;
+import com.example.fitnessapp.model.internetconnection.InternetConnection;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.util.ArrayList;
@@ -64,8 +65,6 @@ public class ListNotesFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // put lost notes on DB
-//        listNotesNoteChangeSharedViewModel.putNotesOnDB(notes);
         authorizationViewModel.getUser().getJournal().get(indexWorkout).setNotes(notes);
 
         JournalFragment journalFragment = new JournalFragment();
@@ -85,17 +84,27 @@ public class ListNotesFragment extends Fragment {
         buttonAddNote = view.findViewById(R.id.buttonAddNote);
         adapter = new Adapter(getActivity(), notes);
 
-        listNotesNoteChangeSharedViewModel.queryAllExercises()
-                .observe(getViewLifecycleOwner(), exercises -> {
-                    exercisesList.addAll(exercises);
-                    notes = authorizationViewModel.getUser()
-                            .getJournal().get(indexWorkout).getNotes();
-                    adapter.setList(notes);
-                });
+        // если есть интернет, грузим упражнения из глобальной базы
+        if(InternetConnection.isConnect(getContext())) {
+            listNotesNoteChangeSharedViewModel.queryAllExercises()
+                    .observe(getViewLifecycleOwner(), exercises -> {
+                        exercisesList.addAll(exercises);
+                        notes = authorizationViewModel.getUser()
+                                .getJournal().get(indexWorkout).getNotes();
+                        adapter.setList(notes);
+                    });
+        } else { // иначе, берём из локальной
+            exercisesList.addAll(listNotesNoteChangeSharedViewModel
+                    .queryAllExercisesLocal());
+            notes = authorizationViewModel.getUser()
+                    .getJournal().get(indexWorkout).getNotes();
+        }
 
         buttonAddNote.setOnClickListener(v -> {
             Note note = new Note();
             note.setId(UUID.randomUUID().toString());
+            note.setRecord("");
+            note.setIdExerscise("");
             note.setIdWorkout(authorizationViewModel.getUser().getJournal()
                     .get(indexWorkout).getId());
             notes.add(note);
@@ -105,8 +114,6 @@ public class ListNotesFragment extends Fragment {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
-            // put lost notes on DB
-//            listNotesNoteChangeSharedViewModel.putNotesOnDB(notes);
             authorizationViewModel.getUser().getJournal().get(indexWorkout).setNotes(notes);
             NoteChangeFragment noteChangeFragment = new NoteChangeFragment(indexWorkout, position);
 
@@ -147,7 +154,6 @@ public class ListNotesFragment extends Fragment {
             Button buttonDelete = convertView.findViewById(R.id.buttonDeleteNote);
 
             buttonDelete.setOnClickListener(v -> {
-//                authorizationViewModel.setUserDeleteNote(notesList.get(position));
                 notesList.remove(position);
                 notes.remove(position);
                 notifyDataSetChanged();
@@ -155,7 +161,7 @@ public class ListNotesFragment extends Fragment {
 
             Note note = notesList.get(position);
 
-            if (note.getIdExerscise() != null && !exercisesList.isEmpty()) {
+            if (!("").equals(note.getIdExerscise()) && !exercisesList.isEmpty()) {
                 textViewEx.setText(exercisesList.get(listNotesNoteChangeSharedViewModel
                         .getIndexExercise(exercisesList, note.getIdExerscise())).getName());
                 textViewRec.setText(note.getRecord());

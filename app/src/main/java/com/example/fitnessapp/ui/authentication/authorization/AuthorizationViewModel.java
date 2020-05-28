@@ -8,11 +8,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.model.Authentication;
-import com.example.fitnessapp.model.dao.impl.NoteActionsLocalDB;
-import com.example.fitnessapp.model.dao.impl.WorkoutActionsLocalDB;
-import com.example.fitnessapp.model.entities.Note;
+import com.example.fitnessapp.model.dao.impl.SettingsActionsLocalDB;
+import com.example.fitnessapp.model.dao.impl.UserActionsGlobalDB;
+import com.example.fitnessapp.model.dao.impl.UserActionsLocalDB;
+import com.example.fitnessapp.model.entities.Settings;
 import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.model.entities.Workout;
+import com.example.fitnessapp.model.internetconnection.InternetConnection;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class AuthorizationViewModel extends AndroidViewModel {
     private Application application;
     private User user;
     private Authentication authentication;
+    private Settings settings;
 
     public AuthorizationViewModel(@NonNull Application application) {
         super(application);
@@ -30,12 +33,59 @@ public class AuthorizationViewModel extends AndroidViewModel {
 
     public LiveData<User> autorization(String email, String password) {
         MutableLiveData<User> liveData = new MutableLiveData<>();
+
+        // ждём, когда придёт юзер
         authentication.authorization(email, password).observeForever(user -> {
-//            UserActionsLocalDB userActionsLocalDB = new UserActionsLocalDB(application);
-//            userActionsLocalDB.add(user);
-//            userActionsLocalDB.disconnect();
-            this.user = user;
-            liveData.setValue(user);
+            SettingsActionsLocalDB settingsActionsLocalDB = new SettingsActionsLocalDB(application);
+            settings = settingsActionsLocalDB.getRecord();
+
+            // если интернет есть
+            if (InternetConnection.isConnect(application)) {
+                // если в прошлой сессии не было интренета и был авторизован текущий юзер
+                if (settings.getStatus() == 0 && settings.getEmail().equals(user.getEmail())) {
+                    UserActionsLocalDB userActionsLocalDB = new UserActionsLocalDB(application);
+
+                    // то берём юзера из локальной базы
+                    User userRes = userActionsLocalDB.getByEmail(user.getEmail());
+
+                    // сохраняем юзера во ViewModel
+                    this.user = userRes;
+                    liveData.setValue(userRes);
+                    userActionsLocalDB.disconnect();
+
+                    // сохраняем информацию о пользователе в локальной базе
+                    settings.setStatus(1);
+                    settings.setEmail(userRes.getEmail());
+                    settingsActionsLocalDB.update(settings);
+
+                    // и обновляем юзера в глобальной БД
+                    UserActionsGlobalDB userActionsGlobalDB = new UserActionsGlobalDB();
+                    userActionsGlobalDB.add(userRes);
+                } else { // иначе, обновляем юзера в локальной БД
+                    UserActionsLocalDB userActionsLocalDB = new UserActionsLocalDB(application);
+                    userActionsLocalDB.update(user);
+                    userActionsLocalDB.disconnect();
+
+                    // сохраняем юзера во ViewModel
+                    this.user = user;
+                    liveData.setValue(user);
+
+                    // сохраняем информацию о пользователе в локальной базе
+                    settings.setStatus(1);
+                    settings.setEmail(user.getEmail());
+                    settingsActionsLocalDB.update(settings);
+                }
+            } else { // иначе, если нет интернета
+//                UserActionsLocalDB userActionsLocalDB = new UserActionsLocalDB(application);
+//                User userRes = userActionsLocalDB.getByEmail(settings.getEmail());
+                this.user = user;
+                liveData.setValue(user); // то отправляем юзера, пришедшего из локальной БД
+
+                // сохраняем информацию о пользователе в локальной базе
+                settings.setStatus(0);
+                settings.setEmail(user.getEmail());
+                settingsActionsLocalDB.update(settings);
+            }
         });
         return liveData;
     }
@@ -52,30 +102,13 @@ public class AuthorizationViewModel extends AndroidViewModel {
         user = null;
     }
 
-    public LiveData<User> getUserSignedIn() {
+    // возврат авторизованного пользователя, в случае,
+    // если пользователь не вышел из приложения и закрыл его
+    public User getUserSignedIn() {
         return authentication.checkSignIn();
     }
 
     public void setUserWorkouts(List<Workout> workouts) {
         this.user.setJournalWorkout(workouts);
-    }
-
-    public void setUserDeleteWorkout(Workout workout) {
-        if(user != null && user.setJournalDeleteWorkout(workout.getId())) {
-                WorkoutActionsLocalDB workoutDAO = new WorkoutActionsLocalDB(application);
-                workoutDAO.remove(workout);
-                workoutDAO.disconnect();
-        }
-    }
-
-    public void setUserDeleteNote(Note note) {
-        WorkoutActionsLocalDB workoutDAO = new WorkoutActionsLocalDB(application);
-        if (!note.isEmpty()) {
-            if (user.setJournalDeleteNote(note.getId(), note.getIdWorkout())) {
-                NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(application);
-                noteDAO.remove(note);
-                noteDAO.disconnect();
-            }
-        }
     }
 }
