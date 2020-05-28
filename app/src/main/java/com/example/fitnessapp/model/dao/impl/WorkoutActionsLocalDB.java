@@ -29,7 +29,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
     public void add(Workout workout) {
         ContentValues cv = new ContentValues();
         String date = workout.getDate().get(Calendar.YEAR) + "-" +
-                (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
+                (workout.getDate().get(Calendar.MONTH)) + "-" +
                 workout.getDate().get(Calendar.DAY_OF_MONTH);
         cv.put("id", workout.getId());
         cv.put("date", date);

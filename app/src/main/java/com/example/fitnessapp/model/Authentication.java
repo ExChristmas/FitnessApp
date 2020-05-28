@@ -3,6 +3,7 @@ package com.example.fitnessapp.model;
 import android.content.Context;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.model.dao.impl.SettingsActionsLocalDB;
@@ -40,7 +41,7 @@ public class Authentication {
                     });
         } else {
             Toast.makeText(context, "Нет соединения с интернетом", Toast.LENGTH_SHORT).show();
-            userLiveData.setValue(userLocalDAO.getByEmail(email));
+//            userLiveData.setValue(userLocalDAO.getByEmail(email));
         }
         return userLiveData;
     }
@@ -50,7 +51,7 @@ public class Authentication {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             User user = new User(email, name, surname);
-                            userLocalDAO.add(user);
+//                            userLocalDAO.add(user);
                             userGlobalDAO.add(user);
                         }
                     });
@@ -60,16 +61,16 @@ public class Authentication {
         mAuth.signOut();
     }
 
-    public User checkSignIn() {
+    public LiveData<User> checkSignIn() {
         if (InternetConnection.isConnect(context)) {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
-                return userLocalDAO.getByEmail(user.getEmail());
+                return userGlobalDAO.getById(user.getEmail());
             }
-            return null;
+            return new MutableLiveData<>();
         } else {
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-            return null;
+            return new MutableLiveData<>();
         }
     }
 }

@@ -33,7 +33,6 @@ public class AuthorizationFragment extends Fragment {
                 new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
         return inflater.inflate(R.layout.email_password_fragment, container,
                 false);
-
     }
 
     @Override
@@ -41,7 +40,19 @@ public class AuthorizationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         User userCheck = authorizationViewModel.getUser();
-        if(userCheck != null) {
+
+        authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
+            if (userCheck != null) {
+                authorizationViewModel.setUser(userCheck);
+                AccountFragment accountFragment = new AccountFragment();
+                accountFragment.setUser(userCheck);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.nav_host_fragment, accountFragment);
+                transaction.commit();
+            }
+            });
+
+        if (userCheck != null) {
             AccountFragment accountFragment = new AccountFragment();
             accountFragment.setUser(userCheck);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -49,27 +60,18 @@ public class AuthorizationFragment extends Fragment {
             transaction.commit();
         }
 
-        userCheck = authorizationViewModel.getUserSignedIn();
-            if (userCheck != null) {
-                AccountFragment accountFragment = new AccountFragment();
-                accountFragment.setUser(userCheck);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment, accountFragment);
-                transaction.commit();
-            }
-
         this.editTextEmail = view.findViewById(R.id.editTextEmail);
         this.editTextPas = view.findViewById(R.id.editTextPas);
         Button buttonSignIn = view.findViewById(R.id.buttonSignIn);
         Button buttonRegistration = view.findViewById(R.id.buttonRegInReg);
 
-        this.editTextEmail.setText("avramenkoav98.mentore@yandex.ru");
+        this.editTextEmail.setText("typaev@mail.ru");
         this.editTextPas.setText("1234567");
 
         buttonSignIn.setOnClickListener(v -> {
             authorizationViewModel.autorization(editTextEmail.getText().toString(),
                     editTextPas.getText().toString()).observe(getViewLifecycleOwner(), user -> {
-                if(user != null) {
+                if (user != null) {
                     AccountFragment accountFragment = new AccountFragment();
                     accountFragment.setUser(user);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();

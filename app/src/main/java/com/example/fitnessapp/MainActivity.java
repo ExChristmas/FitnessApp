@@ -31,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
 //        Settings settings = settingsActionsLocalDB.getRecord();
 //
 //        System.out.println(settings.toString());
-//        Settings settings = new Settings(0, "avramenkoav98.mentore@yandex.ru", 1);
-//        settingsActionsLocalDB.update(settings);
-//
-//        System.out.println(settings.toString());
 
         mainActicityViewModel = new ViewModelProvider(this)
                 .get(MainActicityViewModel.class);

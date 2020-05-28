@@ -18,23 +18,25 @@ public class RecordingToDB {
     private Settings settings;
 
     public RecordingToDB(Context context) {
-        userActionsLocalDB = new UserActionsLocalDB(context);
+//        userActionsLocalDB = new UserActionsLocalDB(context);
         userActionsGlobalDB = new UserActionsGlobalDB();
-        settingsActionsLocalDB = new SettingsActionsLocalDB(context);
+//        settingsActionsLocalDB = new SettingsActionsLocalDB(context);
         mAuth = FirebaseAuth.getInstance();
     }
 
     public void recording(User user) {
-        if (user != null) {
-            settings = settingsActionsLocalDB.getRecord();
-            if (userActionsLocalDB.getByEmail(user.getEmail()) == null) {
-                userActionsLocalDB.add(user);
-            } else {
-                userActionsLocalDB.update(user);
-            }
-            if (settings.getStatus() != 0) {
-                userActionsGlobalDB.add(user);
-            }
+//        if (user != null) {
+//            settings = settingsActionsLocalDB.getRecord();
+//            if (userActionsLocalDB.getByEmail(user.getEmail()) == null) {
+//                userActionsLocalDB.add(user);
+//            } else {
+//                userActionsLocalDB.update(user);
+//            }
+//            if (settings.getStatus() != 0) {
+        if(user != null) {
+            userActionsGlobalDB.add(user);
         }
+//            }
+//        }
     }
 }

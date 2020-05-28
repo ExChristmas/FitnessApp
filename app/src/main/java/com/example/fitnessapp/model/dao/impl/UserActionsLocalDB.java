@@ -48,7 +48,7 @@ public class UserActionsLocalDB implements ConectionDB {
         ContentValues cv = new ContentValues();
         cv.put("email", user.getEmail());
         cv.put("name", user.getName());
-        cv.put("surname", user.getName());
+        cv.put("surname", user.getSurname());
         this.database.update("user", cv, "email = ?",
                 new String[] {user.getEmail()});
         WorkoutActionsLocalDB workoutActionsLocalDB = new WorkoutActionsLocalDB(context);

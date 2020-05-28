@@ -87,7 +87,6 @@ public class JournalFragment extends Fragment {
             });
 
             mDateSetListener = (datePicker, year, month, day) -> {
-
                 // Формируем объект
                 Workout workout = new Workout();
                 GregorianCalendar gregorianCalendar = new GregorianCalendar(year,

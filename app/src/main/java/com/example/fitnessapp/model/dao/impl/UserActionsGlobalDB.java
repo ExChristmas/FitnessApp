@@ -40,7 +40,7 @@ public class UserActionsGlobalDB implements ConectionDB {
             Map<String, Object> workoutObject = new HashMap<>();
             workoutObject.put("id", workout.getId());
             String date = workout.getDate().get(Calendar.YEAR) + "-" +
-                    (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
+                    (workout.getDate().get(Calendar.MONTH)) + "-" +
                     workout.getDate().get(Calendar.DAY_OF_MONTH);
             workoutObject.put("date", date);
             List<Map<String, Object>> listNotes = new ArrayList<>();
@@ -71,10 +71,6 @@ public class UserActionsGlobalDB implements ConectionDB {
                 })
                 .addOnFailureListener(e -> {
                 });
-    }
-
-    public MutableLiveData<User> getByEmail(String email) {
-        return null;
     }
 
     public LiveData<User> getById(String id) {
