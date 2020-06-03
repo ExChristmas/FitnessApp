@@ -82,17 +82,6 @@ public class ListNotesFragment extends Fragment {
         listView = view.findViewById(R.id.listViewNotes);
         buttonAddNote = view.findViewById(R.id.buttonAddNote);
 
-
-//        // если есть интернет, грузим упражнения из глобальной базы
-//        if(InternetConnection.isConnect(getContext())) {
-//            listNotesNoteChangeSharedViewModel.queryAllExercises()
-//                    .observe(getViewLifecycleOwner(), exercises -> {
-//                        exercisesList.addAll(exercises);
-//                        notes = authorizationViewModel.getUser()
-//                                .getJournal().get(indexWorkout).getNotes();
-//                        adapter.setList(notes);
-//                    });
-//        } else { // иначе, берём из локальной
         exercisesList.addAll(listNotesNoteChangeSharedViewModel
                 .queryAllExercisesLocal());
         notes = authorizationViewModel.getUser()
@@ -103,7 +92,6 @@ public class ListNotesFragment extends Fragment {
         }
 
         adapter = new Adapter(getActivity(), notes);
-//        }
 
         buttonAddNote.setOnClickListener(v -> {
             Note note = new Note();
@@ -160,7 +148,6 @@ public class ListNotesFragment extends Fragment {
 
             buttonDelete.setOnClickListener(v -> {
                 notesList.remove(position);
-                notes.remove(position);
                 notifyDataSetChanged();
             });
 

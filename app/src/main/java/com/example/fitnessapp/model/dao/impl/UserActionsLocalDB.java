@@ -39,8 +39,11 @@ public class UserActionsLocalDB implements ConectionDB {
 
     public void remove(User user) {
         WorkoutActionsLocalDB workoutActionsLocalDB = new WorkoutActionsLocalDB(context);
-        for(Workout workout : user.getJournal()) {
-            workoutActionsLocalDB.remove(workout);
+        List<Workout> workoutList = user.getJournal();
+        if(workoutList != null) {
+            for (Workout workout : user.getJournal()) {
+                workoutActionsLocalDB.remove(workout);
+            }
         }
         workoutActionsLocalDB.disconnect();
         this.database.delete("user", "email = ?",

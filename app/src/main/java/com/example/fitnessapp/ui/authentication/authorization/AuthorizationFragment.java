@@ -67,7 +67,7 @@ public class AuthorizationFragment extends Fragment {
         Button buttonSignIn = view.findViewById(R.id.buttonSignIn);
         Button buttonRegistration = view.findViewById(R.id.buttonRegInReg);
 
-        this.editTextEmail.setText("typaev@mail.ru");
+        this.editTextEmail.setText("stark@mail.ru");
         this.editTextPas.setText("1234567");
 
         buttonSignIn.setOnClickListener(v -> {

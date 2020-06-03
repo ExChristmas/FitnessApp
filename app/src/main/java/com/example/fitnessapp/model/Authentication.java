@@ -51,7 +51,7 @@ public class Authentication {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             User user = new User(email, name, surname);
-//                            userLocalDAO.add(user);
+                            userLocalDAO.add(user);
                             userGlobalDAO.add(user);
                         }
                     });

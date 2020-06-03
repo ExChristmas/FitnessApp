@@ -68,6 +68,10 @@ public class JournalFragment extends Fragment {
 
             workouts = authorizationViewModel.getUser().getJournal();
 
+            if(workouts == null) {
+                workouts = new ArrayList<>();
+            }
+
             adapter = new Adapter(getActivity(), workouts);
 
             buttonAddWorkout.setOnClickListener(v -> {

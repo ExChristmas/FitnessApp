@@ -83,6 +83,7 @@ public class AuthorizationViewModel extends AndroidViewModel {
             // сохраняем в ViewModel
             this.user = user;
             //отправляем пользователя во фрагмент
+            liveData.setValue(user);
         }
 
         return liveData;
