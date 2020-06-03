@@ -46,11 +46,11 @@ public class SettingsActionsLocalDB implements ConectionDB {
 
         Settings settings = null;
         if(c.moveToFirst()) {
-            int idColIndex = c.getColumnIndex("id");
+
             int emailColIndex = c.getColumnIndex("email");
             int statusColIndex = c.getColumnIndex("status");
 
-            settings = new Settings(c.getInt(idColIndex), c.getString(emailColIndex),
+            settings = new Settings(c.getString(emailColIndex),
                     c.getInt(statusColIndex));
         }
         return settings;

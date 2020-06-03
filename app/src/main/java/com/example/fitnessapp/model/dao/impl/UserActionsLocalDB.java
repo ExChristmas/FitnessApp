@@ -11,6 +11,9 @@ import com.example.fitnessapp.model.dao.ConectionDB;
 import com.example.fitnessapp.model.entities.User;
 import com.example.fitnessapp.model.entities.Workout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserActionsLocalDB implements ConectionDB {
 
     private SQLiteDatabase database;
@@ -81,6 +84,34 @@ public class UserActionsLocalDB implements ConectionDB {
             user.setJournalWorkout(workoutDAO.getByIdUser(email));
         }
         return user;
+    }
+
+    public List<User> getAll() {
+        @SuppressLint("Recycle") Cursor c = this.database
+                .query("user",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+        List<User> listUser = new ArrayList<>();
+
+        int emailColIndex;
+        int nameColIndex;
+        int surnameColIndex;
+
+        while (c.moveToNext()) {
+
+            emailColIndex = c.getColumnIndex("email");
+            nameColIndex = c.getColumnIndex("name");
+            surnameColIndex = c.getColumnIndex("surname");
+
+            listUser.add(new User(c.getString(emailColIndex), c.getString(nameColIndex),
+                    c.getString(surnameColIndex)));
+        }
+
+        return listUser;
     }
 
     @Override

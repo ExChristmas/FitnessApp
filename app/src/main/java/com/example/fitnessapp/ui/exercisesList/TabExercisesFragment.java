@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
-import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.List;
 
 public class TabExercisesFragment extends Fragment {
 
-    private AuthorizationViewModel authorizationViewModel;
     private int indexFragment;
     private List<Exercise> exercisesList;
     private MutableLiveData<Exercise> exerciseLiveData;
@@ -40,9 +38,6 @@ public class TabExercisesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        this.authorizationViewModel =
-                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
 
         TabExercisesViewModel tabExercisesViewModel = new ViewModelProvider(getActivity())
                 .get(TabExercisesViewModel.class);
@@ -74,7 +69,7 @@ public class TabExercisesFragment extends Fragment {
             }
 
                 listExerciseLiveData.observe(getViewLifecycleOwner(), exercises -> {
-                    exercisesList = exercises;
+                        exercisesList = exercises;
                     List<Integer> images = new ArrayList<>();
 
                     for (Exercise exercise : exercisesList) {

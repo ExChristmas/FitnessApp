@@ -27,6 +27,7 @@ public class ExerciseActionsLocalDB implements ConectionDB {
 
     public void add(Exercise exercise) {
         ContentValues cv = new ContentValues();
+        cv.put("id", exercise.getId());
         cv.put("name", exercise.getName());
         cv.put("description", exercise.getDescription());
         cv.put("part_of_body", exercise.getPartOfBody());
@@ -51,15 +52,27 @@ public class ExerciseActionsLocalDB implements ConectionDB {
         @SuppressLint("Recycle") Cursor c = this.database
                 .query("exercise",
                         null,
-                        "id = ?",
+                        "name = ?",
                         new String[] {name},
                         null,
                         null,
                         null);
         Exercise exercise = null;
+
+        int idColumn;
+        int nameColumn;
+        int partOfBodyColumn;
+        int descriptionColumn;
+
         if (c.moveToFirst()) {
-            exercise = new Exercise(c.getString(0), c.getString(1),
-                    c.getString(2), c.getString(3));
+
+            idColumn = c.getColumnIndex("id");
+            nameColumn = c.getColumnIndex("name");
+            partOfBodyColumn = c.getColumnIndex("part_of_body");
+            descriptionColumn = c.getColumnIndex("description");
+
+            exercise = new Exercise(c.getString(idColumn), c.getString(nameColumn),
+                    c.getString(partOfBodyColumn), c.getString(descriptionColumn));
         }
         return exercise;
     }
@@ -74,9 +87,21 @@ public class ExerciseActionsLocalDB implements ConectionDB {
                         null,
                         null);
         Exercise exercise = null;
+
+        int idColumn;
+        int nameColumn;
+        int partOfBodyColumn;
+        int descriptionColumn;
+
         if (c.moveToFirst()) {
-            exercise = new Exercise(Long.toString(c.getLong(0)), c.getString(1),
-                    c.getString(2), c.getString(3));
+
+            idColumn = c.getColumnIndex("id");
+            nameColumn = c.getColumnIndex("name");
+            partOfBodyColumn = c.getColumnIndex("part_of_body");
+            descriptionColumn = c.getColumnIndex("description");
+
+            exercise = new Exercise(c.getString(idColumn), c.getString(nameColumn),
+                    c.getString(partOfBodyColumn), c.getString(descriptionColumn));
         }
         return exercise;
     }
@@ -91,9 +116,22 @@ public class ExerciseActionsLocalDB implements ConectionDB {
                 null,
                 null);
         List<Exercise> exercises = new ArrayList<>();
-        while (c.moveToFirst()) {
-            Exercise exercise = new Exercise(c.getString(0), c.getString(1),
-                    c.getString(2), c.getString(3));
+
+        int idColumn;
+        int nameColumn;
+        int partOfBodyColumn;
+        int descriptionColumn;
+
+        while (c.moveToNext()) {
+
+            idColumn = c.getColumnIndex("id");
+            nameColumn = c.getColumnIndex("name");
+            partOfBodyColumn = c.getColumnIndex("part_of_body");
+            descriptionColumn = c.getColumnIndex("description");
+
+            Exercise exercise = new Exercise(c.getString(idColumn), c.getString(nameColumn),
+                    c.getString(partOfBodyColumn), c.getString(descriptionColumn));
+
             exercises.add(exercise);
         }
         return Objects.requireNonNull(exercises).isEmpty() ? null : exercises;
@@ -109,9 +147,21 @@ public class ExerciseActionsLocalDB implements ConectionDB {
                 null);
         MutableLiveData<List<Exercise>> listLiveData = new MutableLiveData<>();
         List<Exercise> exercises = new ArrayList<>();
-        while (c.moveToFirst()) {
-            Exercise exercise = new Exercise(c.getString(0), c.getString(1),
-                    c.getString(2), c.getString(3));
+
+        int idColumn;
+        int nameColumn;
+        int partOfBodyColumn;
+        int descriptionColumn;
+
+        while (c.moveToNext()) {
+
+            idColumn = c.getColumnIndex("id");
+            nameColumn = c.getColumnIndex("name");
+            partOfBodyColumn = c.getColumnIndex("part_of_body");
+            descriptionColumn = c.getColumnIndex("description");
+
+            Exercise exercise = new Exercise(c.getString(idColumn), c.getString(nameColumn),
+                    c.getString(partOfBodyColumn), c.getString(descriptionColumn));
             exercises.add(exercise);
         }
         listLiveData.setValue(exercises);

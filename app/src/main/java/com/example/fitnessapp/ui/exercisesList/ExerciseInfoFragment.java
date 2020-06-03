@@ -13,18 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
-import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.lang.reflect.Field;
 
 public class ExerciseInfoFragment extends Fragment {
 
-    private AuthorizationViewModel authorizationViewModel;
     private Exercise exercise;
     private ActionBar actionBar;
 
@@ -32,16 +29,23 @@ public class ExerciseInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        this.authorizationViewModel =
-                new ViewModelProvider(getActivity()).get(AuthorizationViewModel.class);
-
-        View root = inflater.inflate(R.layout.exercise_info_fragment, container, false);
-
         actionBar = ((MainActivity)getActivity()).getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
-        return root;
+
+        return inflater.inflate(R.layout.exercise_info_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        TextView textViewName = view.findViewById(R.id.textViewNameExInfo);
+        TextView textViewDescript = view.findViewById(R.id.textViewDescriptExInfo);
+        ImageView image = view.findViewById(R.id.imageViewExInfo);
+
+        textViewName.setText(exercise.getName());
+        textViewDescript.setText(exercise.getDescription());
+        image.setImageResource(getId(exercise.getId(), R.drawable.class));
     }
 
     @Override
@@ -54,17 +58,6 @@ public class ExerciseInfoFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(false);
         setHasOptionsMenu(false);
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        TextView textViewName = view.findViewById(R.id.textViewNameExInfo);
-        TextView textViewDescript = view.findViewById(R.id.textViewDescriptExInfo);
-        ImageView image = view.findViewById(R.id.imageViewExInfo);
-
-        textViewName.setText(exercise.getName());
-        textViewDescript.setText(exercise.getDescription());
-        image.setImageResource(getId(exercise.getId(), R.drawable.class));
     }
 
     public static int getId(String resourceName, Class<?> c) {

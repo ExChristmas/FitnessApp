@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.User;
+import com.example.fitnessapp.model.internetconnection.InternetConnection;
 import com.example.fitnessapp.ui.authentication.account.AccountFragment;
 import com.example.fitnessapp.ui.authentication.registration.RegistrationFragment;
 
@@ -42,10 +44,10 @@ public class AuthorizationFragment extends Fragment {
         User userCheck = authorizationViewModel.getUser();
 
         authorizationViewModel.getUserSignedIn().observe(getViewLifecycleOwner(), user -> {
-            if (userCheck != null) {
-                authorizationViewModel.setUser(userCheck);
+            if (user != null) {
+                authorizationViewModel.setUser(user);
                 AccountFragment accountFragment = new AccountFragment();
-                accountFragment.setUser(userCheck);
+                accountFragment.setUser(user);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.nav_host_fragment, accountFragment);
                 transaction.commit();
@@ -82,6 +84,10 @@ public class AuthorizationFragment extends Fragment {
         });
 
         buttonRegistration.setOnClickListener(v -> {
+            if(!InternetConnection.isConnect(getContext())) {
+                Toast.makeText(getContext(),
+                        "Нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
+            }
             RegistrationFragment registrationFragment = new RegistrationFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.nav_host_fragment, registrationFragment);

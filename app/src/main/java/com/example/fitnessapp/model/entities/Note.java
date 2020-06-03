@@ -1,5 +1,7 @@
 package com.example.fitnessapp.model.entities;
 
+import androidx.annotation.NonNull;
+
 public class Note {
 
     private String id;
@@ -14,6 +16,12 @@ public class Note {
         this.record = record;
         this.idWorkout = idWorkout;
         this.idExerscise = idExerscise;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return id + " | " + idWorkout + " | " + idExerscise;
     }
 
     public String getId() {

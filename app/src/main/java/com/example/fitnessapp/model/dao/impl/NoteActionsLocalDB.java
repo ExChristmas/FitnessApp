@@ -53,15 +53,50 @@ public class NoteActionsLocalDB implements ConectionDB {
                         null,
                         null,
                         null);
+
         List<Note> noteList = new ArrayList<>();
         while(c.moveToNext()) {
             Note note = new Note(c.getString(0),
                     c.getString(1),
                     idWorkout,
-                    c.getString(2));
+                    c.getString(3));
+            noteList.add(note);
+        }
+        return noteList.isEmpty() ? new ArrayList<>() : noteList;
+    }
+
+    public List<Note> getAll() {
+        @SuppressLint("Recycle") Cursor c = this.database
+                .query("note",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+        List<Note> noteList = new ArrayList<>();
+
+        int idColumn;
+        int recordColumn;
+        int idWorkoutColumn;
+        int idExerciseColumn;
+
+        while(c.moveToNext()) {
+
+            idColumn = c.getColumnIndex("id");
+            recordColumn = c.getColumnIndex("record");
+            idWorkoutColumn = c.getColumnIndex("id_workout");
+            idExerciseColumn = c.getColumnIndex("id_exercise");
+
+            Note note = new Note(c.getString(idColumn),
+                    c.getString(recordColumn),
+                    c.getString(idWorkoutColumn),
+                    c.getString(idExerciseColumn));
+
             noteList.add(note);
         }
         return noteList.isEmpty() ? null : noteList;
+
     }
 
     public void removeByIdWorkout(String idWorkout) {

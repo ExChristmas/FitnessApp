@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,12 +31,18 @@ public class AccountFragment extends Fragment {
                 .get(AccountViewModel.class);
         this.authorizationViewModel = new ViewModelProvider(getActivity())
                 .get(AuthorizationViewModel.class);
-        View root = inflater.inflate(R.layout.account_fragment, container, false);
 
-        TextView textViewName = root.findViewById(R.id.textViewName);
-        TextView textViewSurname = root.findViewById(R.id.textViewSurname);
-        TextView textViewEmail = root.findViewById(R.id.textViewEmail);
-        Button buttonSignOut = root.findViewById(R.id.buttonSignOut);
+         return inflater.inflate(R.layout.account_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView textViewName = view.findViewById(R.id.textViewName);
+        TextView textViewSurname = view.findViewById(R.id.textViewSurname);
+        TextView textViewEmail = view.findViewById(R.id.textViewEmail);
+        Button buttonSignOut = view.findViewById(R.id.buttonSignOut);
 
         textViewName.setText(user.getName());
         textViewSurname.setText(user.getSurname());
@@ -50,8 +57,6 @@ public class AccountFragment extends Fragment {
             transaction.replace(R.id.nav_host_fragment, authorizationFragment);
             transaction.commit();
         });
-
-        return root;
     }
 
     public void setUser(User user) {

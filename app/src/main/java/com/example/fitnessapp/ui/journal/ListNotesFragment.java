@@ -22,7 +22,6 @@ import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.model.entities.Exercise;
 import com.example.fitnessapp.model.entities.Note;
-import com.example.fitnessapp.model.internetconnection.InternetConnection;
 import com.example.fitnessapp.ui.authentication.authorization.AuthorizationViewModel;
 
 import java.util.ArrayList;
@@ -82,23 +81,29 @@ public class ListNotesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         listView = view.findViewById(R.id.listViewNotes);
         buttonAddNote = view.findViewById(R.id.buttonAddNote);
-        adapter = new Adapter(getActivity(), notes);
 
-        // если есть интернет, грузим упражнения из глобальной базы
-        if(InternetConnection.isConnect(getContext())) {
-            listNotesNoteChangeSharedViewModel.queryAllExercises()
-                    .observe(getViewLifecycleOwner(), exercises -> {
-                        exercisesList.addAll(exercises);
-                        notes = authorizationViewModel.getUser()
-                                .getJournal().get(indexWorkout).getNotes();
-                        adapter.setList(notes);
-                    });
-        } else { // иначе, берём из локальной
-            exercisesList.addAll(listNotesNoteChangeSharedViewModel
-                    .queryAllExercisesLocal());
-            notes = authorizationViewModel.getUser()
-                    .getJournal().get(indexWorkout).getNotes();
+
+//        // если есть интернет, грузим упражнения из глобальной базы
+//        if(InternetConnection.isConnect(getContext())) {
+//            listNotesNoteChangeSharedViewModel.queryAllExercises()
+//                    .observe(getViewLifecycleOwner(), exercises -> {
+//                        exercisesList.addAll(exercises);
+//                        notes = authorizationViewModel.getUser()
+//                                .getJournal().get(indexWorkout).getNotes();
+//                        adapter.setList(notes);
+//                    });
+//        } else { // иначе, берём из локальной
+        exercisesList.addAll(listNotesNoteChangeSharedViewModel
+                .queryAllExercisesLocal());
+        notes = authorizationViewModel.getUser()
+                .getJournal().get(indexWorkout).getNotes();
+
+        if (notes == null) {
+            notes = new ArrayList<>();
         }
+
+        adapter = new Adapter(getActivity(), notes);
+//        }
 
         buttonAddNote.setOnClickListener(v -> {
             Note note = new Note();
@@ -108,7 +113,7 @@ public class ListNotesFragment extends Fragment {
             note.setIdWorkout(authorizationViewModel.getUser().getJournal()
                     .get(indexWorkout).getId());
             notes.add(note);
-            adapter.setList(notes);
+            adapter.notifyDataSetChanged();
         });
 
         listView.setAdapter(adapter);

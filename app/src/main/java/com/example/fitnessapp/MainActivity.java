@@ -23,10 +23,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getApplicationContext().deleteDatabase("fitnessDB");
-
+//
 //        SettingsActionsLocalDB settingsActionsLocalDB =
 //                new SettingsActionsLocalDB(getApplicationContext());
-//        settingsActionsLocalDB.add();
+//        Settings settings = new Settings("typaev@mail.ru", 0);
+//        settingsActionsLocalDB.update(settings);
 //
 //        Settings settings = settingsActionsLocalDB.getRecord();
 //
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
                 .get(AccountViewModel.class);
         authorizationViewModel = new ViewModelProvider(this)
                 .get(AuthorizationViewModel.class);
+
+        mainActicityViewModel.selectAll();
 
         // загружаем упражнения в локальную базу
         mainActicityViewModel.exerciseLoading();
@@ -60,6 +63,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        accountViewModel.recording(authorizationViewModel.getUser());
+//        accountViewModel.recording(authorizationViewModel.getUser());
     }
 }

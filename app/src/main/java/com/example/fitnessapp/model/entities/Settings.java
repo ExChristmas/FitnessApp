@@ -10,8 +10,8 @@ public class Settings {
 
     public Settings() { }
 
-    public Settings(int id, String email, int status) {
-        this.id = id;
+    public Settings(String email, int status) {
+        this.id = 0;
         this.email = email;
         this.status = status;
     }

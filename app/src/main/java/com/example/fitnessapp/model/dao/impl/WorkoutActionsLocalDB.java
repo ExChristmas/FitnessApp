@@ -55,7 +55,7 @@ public class WorkoutActionsLocalDB implements ConectionDB {
     public void update(Workout workout) {
         ContentValues cv = new ContentValues();
         String date = workout.getDate().get(Calendar.YEAR) + "-" +
-                (workout.getDate().get(Calendar.MONTH) + 1) + "-" +
+                (workout.getDate().get(Calendar.MONTH)) + "-" +
                 workout.getDate().get(Calendar.DAY_OF_MONTH);
         cv.put("date", date);
         cv.put("id_user", workout.getIdUser());
@@ -80,16 +80,26 @@ public class WorkoutActionsLocalDB implements ConectionDB {
         List<Workout> workoutsList = new ArrayList<>();
         NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(this.context);
         String idWorkout;
+
+        int idColumn;
+        int idDateColumn;
+        int idUserColumn;
+
         while (c.moveToNext()) {
-                    idWorkout = c.getString(0);
+
+            idColumn = c.getColumnIndex("id");
+            idDateColumn = c.getColumnIndex("date");
+            idUserColumn = c.getColumnIndex("id_user");
+
+                    idWorkout = c.getString(idColumn);
                     //преобразование строки в тип хранения даты
-                    String[] ymd = c.getString(1).split("-");
+                    String[] ymd = c.getString(idDateColumn).split("-");
                     GregorianCalendar date = new GregorianCalendar(Integer.parseInt(ymd[0]),
                             Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]));
 
                     Workout workout = new Workout(idWorkout,
                             date,
-                            c.getString(2));
+                            c.getString(idUserColumn));
                     workout.setNotes(noteDAO.getByIdWorkout(idWorkout));
                     workoutsList.add(workout);
             }
@@ -106,24 +116,62 @@ public class WorkoutActionsLocalDB implements ConectionDB {
                         null,
                         null);
         Workout workout = null;
+
         if (c.moveToFirst()) {
             NoteActionsLocalDB noteDAO = new NoteActionsLocalDB(this.context);
+
+            int idColumn = c.getColumnIndex("id");
+            int idDateColumn = c.getColumnIndex("date");
+            int idUserColumn = c.getColumnIndex("id_user");
+
             //преобразование строки в тип хранения даты
-            String[] ymd = c.getString(1).split("-");
+            String[] ymd = c.getString(idDateColumn).split("-");
             GregorianCalendar date = new GregorianCalendar(Integer.parseInt(ymd[0]),
                     Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]));
 
-                workout = new Workout(id,
+                workout = new Workout(c.getString(idColumn),
                         date,
-                        c.getString(2));
+                        c.getString(idUserColumn));
                 workout.setNotes(noteDAO.getByIdWorkout(id));
         }
         return workout;
+    }
+
+    public List<Workout> getAll() {
+        @SuppressLint("Recycle") Cursor c = this.database
+                .query("workout",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+        List<Workout> listWorkout = new ArrayList<>();
+
+        int idColumn;
+        int idDateColumn;
+        int idUserColumn;
+
+        while(c.moveToNext()) {
+
+            idColumn = c.getColumnIndex("id");
+            idDateColumn = c.getColumnIndex("date");
+            idUserColumn = c.getColumnIndex("id_user");
+
+            String[] ymd = c.getString(idDateColumn).split("-");
+            GregorianCalendar date = new GregorianCalendar(Integer.parseInt(ymd[0]),
+                    Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]));
+
+            listWorkout.add(new Workout(c.getString(idColumn),
+                    date,
+                    c.getString(idUserColumn)));
+        }
+
+        return listWorkout;
     }
 
     @Override
     public void disconnect() {
         this.database.close();
     }
-
 }

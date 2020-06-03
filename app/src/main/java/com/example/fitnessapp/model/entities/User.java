@@ -1,5 +1,7 @@
 package com.example.fitnessapp.model.entities;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +11,8 @@ public class User implements Serializable {
     private String name;
     private String surname;
     private String email;
-
     private List<Workout> journal;
+
 
     public User() { }
 
@@ -26,6 +28,12 @@ public class User implements Serializable {
         this.name = user.name;
         this.surname = user.surname;
         this.journal = user.journal;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return email + " | " + name + " | " + surname;
     }
 
     public String getName() {

@@ -1,5 +1,9 @@
 package com.example.fitnessapp.model.entities;
 
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -8,7 +12,6 @@ public class Workout {
     private String id;
     private GregorianCalendar date;
     private String idUser;
-
     private List<Note> notes;
 
     public Workout() { }
@@ -17,7 +20,14 @@ public class Workout {
         this.id = id;
         this.date = date;
         this.idUser = idUser;
-        this.notes = null;
+        this.notes = new ArrayList<>();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return id + " | " + date.get(Calendar.YEAR) + "-" + date.get(Calendar.MONTH) + "-" + date.get(Calendar.DAY_OF_YEAR)
+                + " | " + idUser;
     }
 
     public String getId() {

@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.fitnessapp.model.dao.impl.ExerciseActionsGlobalDB;
 import com.example.fitnessapp.model.dao.impl.ExerciseActionsLocalDB;
@@ -31,8 +32,13 @@ public class TabExercisesViewModel extends AndroidViewModel {
         if(InternetConnection.isConnect(application)) {
             return exerciseActionsGlobalDB.getByPartOfBody(partOfBody);
         }
-        return exerciseActionsLocalDB.getByPartOfBody(partOfBody);
 
+        LiveData<List<Exercise>> exerciseLiveData =
+                exerciseActionsLocalDB.getByPartOfBody(partOfBody);
+        if (exerciseLiveData != null) {
+            return exerciseLiveData;
+        }
+        return new MutableLiveData<>();
     }
 
 }
